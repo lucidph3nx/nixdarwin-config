@@ -14,7 +14,7 @@
     # Macos Modules
     darwin = {
       url = "github:lnl7/nix-darwin";
-      inputs.nixpkgs.follows = "darwinpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     home-manager = {
@@ -26,7 +26,6 @@
   outputs = {
     self,
     nixpkgs,
-    darwinpkgs,
     home-manager,
     darwin,
     ...
@@ -37,7 +36,7 @@
     darwinConfigurations = {
       m1mac = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
-        pkgs = import darwinpkgs {
+        pkgs = import nixpkgs {
           system = "aarch64-darwin";
           config.allowUnfree = true;
         };
