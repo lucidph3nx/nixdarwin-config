@@ -3,7 +3,7 @@
 
   inputs = {
     # Our primary nixpkgs repo. Modify with caution.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
     nixpkgs-unstable = {
       url = "github:nixos/nixpkgs/nixos-unstable";
@@ -22,7 +22,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/master";
+      url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -47,7 +47,7 @@
         specialArgs = {inherit inputs outputs;};
         modules = let
           defaults = {pkgs, ...}: {
-            _module.args.pkgs-stable = import inputs.nixpkgs-unstable {inherit (pkgs.stdenv.targetPlatform) system;};
+            _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {inherit (pkgs.stdenv.targetPlatform) system;};
           };
         in [
           defaults

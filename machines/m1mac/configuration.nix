@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable,
   inputs,
   ...
 }: {
@@ -121,6 +122,7 @@
     useUserPackages = true;
     extraSpecialArgs = {
       inherit inputs;
+      inherit pkgs-unstable;
     };
     users = {
       ben.imports = [
@@ -129,4 +131,5 @@
       ];
     };
   };
+  system.stateVersion = 5;
 }
