@@ -27,7 +27,6 @@
           mermaid
           lua
           markdown
-          nginx
           nix
           python
           rust

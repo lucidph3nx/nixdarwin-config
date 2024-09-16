@@ -1,6 +1,6 @@
-{pkgs, ...}: {
+{pkgs, pkgs-unstable, ...}: {
   programs.neovim.plugins = [
-    pkgs.vimPlugins.nvim-snippets
+    pkgs-unstable.vimPlugins.nvim-snippets
     pkgs.vimPlugins.friendly-snippets
     {
       plugin = pkgs.vimPlugins.cmp_luasnip;
