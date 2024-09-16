@@ -5,6 +5,10 @@
     # Our primary nixpkgs repo. Modify with caution.
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
+    nixpkgs-unstable = {
+      url = "github:nixos/nixpkgs/nixos-unstable";
+    };
+
     # sops
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -41,7 +45,12 @@
           config.allowUnfree = true;
         };
         specialArgs = {inherit inputs outputs;};
-        modules = [
+        modules = let
+          defaults = {pkgs, ...}: {
+            _module.args.pkgs-stable = import inputs.nixpkgs-unstable {inherit (pkgs.stdenv.targetPlatform) system;};
+          };
+        in [
+          defaults
           ./machines/m1mac/configuration.nix
           home-manager.darwinModules.home-manager
         ];
