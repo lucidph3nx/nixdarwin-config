@@ -40,4 +40,8 @@
     ".config/karabiner/karabiner.json".source = ./files/karabiner.json;
     ".config/aerospace/aerospace.toml".source = ./files/aerospace.toml;
   };
+  programs.ssh = {
+    enable = true;
+    includes = ["workconfig"];
+  };
 }
