@@ -46,19 +46,5 @@
         map <enter> :open
       '';
     };
-    xdg.desktopEntries = lib.mkIf pkgs.stdenv.isLinux {
-      lf = {
-        name = "lf";
-        genericName = "file manager";
-        exec = "kitty lf";
-        icon = "utilities-terminal";
-        categories = ["ConsoleOnly" "System" "FileTools" "FileManager"];
-        mimeType = ["inode/directory"];
-      };
-    };
-    xdg.mimeApps.defaultApplications = {
-      "inode/directory" = ["lf.desktop"];
-      "inode/mount-point" = ["lf.desktop"];
-    };
   };
 }
