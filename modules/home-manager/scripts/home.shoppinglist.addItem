@@ -1,7 +1,5 @@
-#!/bin/sh
-# rofi style for shoppinglist add
-rofi_style_shoppinglistentry='listview { enabled: false;} inputbar { children: [entry]; border-color: #d699b6;} entry { placeholder: "Add Item to Shopping List"; }'
-
+#!/bin/zsh
+echo $PATH
 # function with curl to add item via notion api
 add_item_to_shopping_list() {
   ITEM_TO_ADD="$*"
@@ -34,5 +32,5 @@ add_item_to_shopping_list() {
   fi
 }
 # Spawn rofi menu and get list item
-selected_item=$(rofi -dmenu -i -theme-str "$rofi_style_shoppinglistentry")
+selected_item=$(echo \n | choose -f "JetbrainsMono Nerd Font" -c "a7c080" -b "3d484d" -s 24 -m -n 0 -p "Add Item to Shopping List")
 add_item_to_shopping_list "$selected_item"
