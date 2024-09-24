@@ -18,6 +18,7 @@
     shells = [pkgs.bash pkgs.zsh];
     loginShell = pkgs.zsh;
     systemPackages = with pkgs; [
+      age
       arping
       azure-cli
       cloudflared
