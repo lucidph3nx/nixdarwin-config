@@ -29,7 +29,7 @@
               subdir = 'templates',
             },
             follow_url_func = function(url)
-              vim.fn.jobstart({ "xdg-open", url })
+              vim.fn.jobstart({ "open", url })
             end,
             new_notes_location = 'notes_subdir',
             wiki_link_func = function(opts)
