@@ -16,6 +16,7 @@
     ./leap.nix
     ./lualine.nix
     ./luasnip.nix
+    ./markdownpreview.nix
     ./nvim-cmp.nix
     ./nvim-lspconfig.nix
     ./nvim-sops.nix
