@@ -102,16 +102,17 @@
       # "int128/kubelogin/kubelogin"
       "node"
       "borders" # JankyBorders
+      "ripgrep" # for plenary in neovim, it can't find the nix binary
     ];
     taps = [
       "FelixKratz/formulae" # JankyBorders
     ];
     casks = [
-      "nikitabobko/tap/aerospace"
       "1password"
       "1password-cli"
       "bitwarden"
       "firefox"
+      "nikitabobko/tap/aerospace"
       "raycast"
       "scroll-reverser"
     ];
