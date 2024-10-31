@@ -55,6 +55,23 @@
           home-manager.darwinModules.home-manager
         ];
       };
+      x86mac = darwin.lib.darwinSystem {
+        system = "x86_64-darwin";
+        pkgs = import nixpkgs {
+          system = "x86_64-darwin";
+          config.allowUnfree = true;
+        };
+        specialArgs = {inherit inputs outputs;};
+        modules = let
+          defaults = {pkgs, ...}: {
+            _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {inherit (pkgs.stdenv.targetPlatform) system;};
+          };
+        in [
+          defaults
+          ./machines/x86mac/configuration.nix
+          home-manager.darwinModules.home-manager
+        ];
+      };
     };
   };
 }
