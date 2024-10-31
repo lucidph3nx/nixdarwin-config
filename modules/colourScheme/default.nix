@@ -5,7 +5,7 @@
 }: {
   # change themes here
   imports = [
-    # ./everforest.nix
-    ./github-light.nix
+    ./everforest.nix
+    # ./github-light.nix
   ];
 }
