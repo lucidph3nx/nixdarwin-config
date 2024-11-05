@@ -6,7 +6,7 @@
 }:
 with config.theme; {
   config = lib.mkIf config.homeManagerModules.firefox.enable {
-    programs.firefox.profiles.main.userContent =
+    home.file.".mozilla/firefox/ben/chrome/userContent.css".text = 
       /*
       css
       */

@@ -13,7 +13,7 @@ with config.theme; {
     homeManagerModules.firefox.hideUrlbar = lib.mkDefault false;
     # heavy firefox customization
     # mostly inspired/copied from https://github.com/Dook97/firefox-qutebrowser-userchrome
-    programs.firefox.profiles.main.userChrome = let
+    home.file.".mozilla/firefox/ben/chrome/userChrome.css".text = let
       hideUrlBar =
         /*
         css
