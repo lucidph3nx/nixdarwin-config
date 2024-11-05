@@ -55,6 +55,24 @@
           home-manager.darwinModules.home-manager
         ];
       };
+      # temporary test machine
+      m1mac-test = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        pkgs = import nixpkgs {
+          system = "aarch64-darwin";
+          config.allowUnfree = true;
+        };
+        specialArgs = {inherit inputs outputs;};
+        modules = let
+          defaults = {pkgs, ...}: {
+            _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {inherit (pkgs.stdenv.targetPlatform) system;};
+          };
+        in [
+          defaults
+          ./machines/m1mac-test/configuration.nix
+          home-manager.darwinModules.home-manager
+        ];
+      };
       x86mac = darwin.lib.darwinSystem {
         system = "x86_64-darwin";
         pkgs = import nixpkgs {
