@@ -56,7 +56,7 @@
   '';
   services = {
     nix-daemon.enable = true;
-    karabiner-elements.enable = true;
+    karabiner-elements.enable = false;
   };
   system.defaults = {
     finder = {
@@ -111,6 +111,7 @@
       "1password-cli"
       "bitwarden"
       "firefox"
+      "karabiner-elements"
       "nikitabobko/tap/aerospace"
       "raycast"
       "scroll-reverser"

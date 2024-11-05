@@ -21,7 +21,10 @@
   config = lib.mkIf config.homeManagerModules.guiApps.enable {
     homeManagerModules = {
       calibre.enable = lib.mkDefault false;
-      kitty.enable = lib.mkDefault true;
+      kitty = {
+        enable = lib.mkDefault true;
+        configOnly = lib.mkDefault false;
+      };
       libreoffice.enable = lib.mkDefault false;
       mpv.enable = lib.mkDefault true;
       obsidian.enable = lib.mkDefault false;

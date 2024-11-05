@@ -15,6 +15,7 @@
       workSSH.enable = true;
       kubeconfig.enable = true;
     };
+    kitty.configOnly = true; # kitty on this machine is installed via homebrew
     homeAutomation.enable = true;
   };
   # You should not change this value, even if you update Home Manager. If you do
