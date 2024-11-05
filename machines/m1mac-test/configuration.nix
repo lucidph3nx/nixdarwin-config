@@ -56,7 +56,7 @@
   '';
   services = {
     nix-daemon.enable = true;
-    karabiner-elements.false = true;
+    karabiner-elements.enabled = true;
   };
   system.defaults = {
     finder = {
