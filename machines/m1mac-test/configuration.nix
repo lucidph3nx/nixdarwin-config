@@ -111,6 +111,7 @@
       "1password-cli"
       "bitwarden"
       "firefox"
+      "kitty"
       "nikitabobko/tap/aerospace"
       "raycast"
       "scroll-reverser"
