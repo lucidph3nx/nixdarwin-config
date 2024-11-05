@@ -5,6 +5,7 @@
 }: {
   imports = [
     ./cli
+    ./firefox
     ./guiApps
     ./neovim
     ./scripts
@@ -14,6 +15,8 @@
   ];
   config = {
     homeManagerModules = {
+      # note: firefox is config only
+      firefox.enable = lib.mkDefault true;
       guiApps.enable = lib.mkDefault true;
       neovim.enable = lib.mkDefault true;
       sops.enable = lib.mkDefault false;
