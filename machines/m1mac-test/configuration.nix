@@ -56,7 +56,7 @@
   '';
   services = {
     nix-daemon.enable = true;
-    karabiner-elements.enable = true;
+    karabiner-elements.enable = false; # doesnt work in 15.1
   };
   system.defaults = {
     finder = {
@@ -111,6 +111,7 @@
       "1password-cli"
       "bitwarden"
       "firefox"
+      "karabiner-elements"
       "kitty"
       "nikitabobko/tap/aerospace"
       "raycast"
