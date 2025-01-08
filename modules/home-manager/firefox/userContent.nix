@@ -40,19 +40,122 @@ with config.theme; {
             font-family: JetBrains Mono, monospace !important;
           }
         }
+        @-moz-document url-prefix("https://www.metservice.com") {
+          * {
+            border-radius: 0px !important;
+            text-rendering: auto !important;
+            font-family: JetBrains Mono, monospace !important;
+          }
+          html {
+            background-color: ${bg1} !important;
+          }
+          .Container--blue,
+          .App-container, .App-primary,
+          .Nav-scroller,
+          .Map-cartography,
+          .sticky-headers,
+          .sticky-bar-context-handler,
+          .Nav--secondary .Container,
+          .sticky-bar-context-primary-section {
+            background-color: ${bg0} !important;
+          }
+          .Nav-toggle,
+          .Nav--primary {
+            background-color: ${bg1} !important;
+          }
+          #InitialPageLoader,
+          .Main {
+            background-color: ${bg_dim} !important;
+          }
+          #Nav,
+          #Nav--primary,
+          #Nav--secondary,
+          #Container-inner,
+          #Container--blue {
+            background-color: ${bg0} !important;
+          }
+
+          .Map .Map--primary .Map--static,
+          .Nav--secondary .Container::before,
+          .Nav--secondary .Container::after,
+          .Container-inner.SearchContainer::before,
+          .Container-inner.SearchContainer.SearchContainer--blue-solid::before,
+          .Container-inner.SearchContainer.SearchContainer--blue-solid::after,
+          .Container--secondary,
+          .Container--blue--gradient {
+            background: none !important;
+          }
+          div[data-module-name="favourite-summary-mod"] {
+            display: none !important;
+          }
+          .SearchBar .domRef > .u-flex .u-flexAlignItemsCenter,
+          .Footer-section--promo {
+            display: none !important;
+          }
+          .Footer-section--global {
+            background-color: ${bg_dim} !important;
+          }
+          .pageLoader-animation {
+            background: ${bg0} !important;
+          }
+          .Nav--secondary .Nav-menu-list-item.is-active a,
+          .Nav-menu-list-item.is-active a {
+            color: ${bg0} !important;
+            background-color: ${primary} !important;
+            box-shadow: none !important;
+          }
+          .Nav-menu-list-item a {
+            color: ${foreground} !important;
+          }
+          .SearchBar-actions-icon {
+            color: ${primary} !important;
+          }
+          .SearchBar-actions-find:focus,
+          .SearchBar-actions-find:hover {
+            background: none !important;
+          }
+          .SearchBar-actions-find {
+            border-color: ${primary} !important;
+            box-shadow: none !important;
+            color: ${foreground} !important;
+            margin-right: 0px !important;
+          }
+          .SearchBar {
+            background-color: ${bg0} !important;
+            box-shadow: none !important;
+          }
+
+        }
 
         /* squared customised youtube */
         @-moz-document url-prefix("https://www.youtube.com") {
           * {
             border-radius: 0px !important;
-          }
-
-          body {
             font-family: JetBrains Mono, monospace !important;
           }
-          /* background*/
-          :root {
-            --yt-spec-base-background ${bg_dim} !important;
+
+          html[dark], [dark] {
+            --yt-spec-base-background: ${bg_dim} !important;
+            --yt-spec-raised-background: ${bg0} !important;
+            --yt-spec-menu-background: ${bg0} !important;
+            --yt-spec-static-overlay-text-primary: ${foreground} !important;
+            --yt-spec-static-overlay-text-secondary: ${grey2} !important;
+            --yt-spec-text-primary: ${foreground} !important;
+            --yt-spec-text-secondary: ${grey2} !important;
+            --ytd-searchbox-background: ${bg_dim} !important;
+            --ytd-searchbox-legacy-border-color: ${bg0} !important;
+          }
+          .yt-spec-button-shape-next--call-to-action.yt-spec-button-shape-next--text {
+            color: ${green} !important;
+          }
+          ytd-app {
+            --ytd-mini-guide-width: 0px !important;
+          }
+          ytd-mini-guide-renderer {
+            display: none !important;
+          }
+          #contents {
+            margin-left: 0px !important;
           }
         }
 
@@ -113,6 +216,15 @@ with config.theme; {
           .give-gold-button,
           .goldvertisement,
           .embed-comment,
+          .premium-banner-outer,
+          .sidebox,
+          .account-activity-box,
+          .share,
+          .link-save-button,
+          .hide-button,
+          .report-button,
+          .crosspost-button,
+          .noCtrlF,
           .promoted,
           .nub {
             display: none !important;
@@ -133,8 +245,8 @@ with config.theme; {
           }
           /* main table links */
           .res-nightmode .link, .res-nightmode .helpcenter-form .section-content {
-            background-color: var(--system-theme-bg1) !important;
-            border-color: var(--system-theme-bg0) !important;
+            background-color: var(--system-theme-bg0) !important;
+            border-color: var(--system-theme-bg_dim) !important;
             border-style: solid !important;
             border-width: 1px !important;
             padding: 6px !important;
@@ -157,8 +269,9 @@ with config.theme; {
 
           /* post rank */
           .rank {
+            font-size: large !important;
             text-align: center !important;
-            width: 40px !important;
+            width: 30px !important;
             color: var(--system-theme-green) !important;
             margin-top: auto !important;
             margin-bottom: auto !important;
@@ -166,10 +279,13 @@ with config.theme; {
           }
           /* votes */
           .midcol {
+            font-size: medium !important;
             width: 60px !important;
             flex-shrink: 0 !important;
             margin-top: auto !important;
             margin-bottom: auto !important;
+            margin-left: 0px !important;
+            margin-right: 0px !important;
           }
           .score.unvoted,
           .score.dislikes,
@@ -447,6 +563,106 @@ with config.theme; {
 
           a.hover {
             color: var(--system-theme-aqua) !important;
+          }
+        }
+        @-moz-document url-prefix("https://search.tinfoilforest.nz") {
+          * {
+            font-family: JetBrains Mono, monospace !important;
+            border-radius: 0px !important;
+          }
+          :root {
+            --color-base-font: ${foreground} !important;
+            --color-base-background: ${bg0} !important;
+            --color-base-background-mobile: ${bg0} !important;
+            --color-url-font: ${primary} !important;
+            --color-url-visited-font: ${purple} !important;
+            --color-header-background: ${bg_dim} !important;
+            --color-header-border: ${bg0} !important;
+            --color-footer-background: ${bg_dim} !important;
+            --color-footer-border: ${bg0} !important;
+            --color-sidebar-border: ${bg1} !important;
+            --color-sidebar-font: ${foreground} !important;
+            --color-sidebar-background: ${bg0} !important;
+            --color-backtotop-font: ${foreground} !important;
+            --color-backtotop-border: ${bg0} !important; 
+            --color-backtotop-background: ${bg_dim} !important;
+            --color-btn-background: ${primary} !important;
+            --color-btn-font: ${bg0} !important;
+            --color-show-btn-background: ${bg1} !important;
+            --color-show-btn-font: ${foreground} !important;
+            --color-search-border: ${bg1} !important;
+            --color-search-shadow: none !important;
+            --color-search-background: ${bg0} !important;
+            --color-search-font: ${foreground} !important;
+            --color-search-background-hover: ${primary} !important;
+            --color-error: #f55b5b;
+            --color-error-background: darken(#db3434, 40%);
+            --color-warning: #f1d561;
+            --color-warning-background: darken(#dbba34, 40%);
+            --color-success: #79f56e;
+            --color-success-background: darken(#42db34, 40%);
+            --color-categories-item-selected-font: ${primary} !important;
+            --color-categories-item-border-selected: ${primary} !important;
+            --color-autocomplete-font: ${foreground} !important;
+            --color-autocomplete-border: ${bg1} !important;
+            --color-autocomplete-shadow: none !important;
+            --color-autocomplete-background: ${bg_dim} !important;
+            --color-autocomplete-background-hover: ${bg_dim} !important;
+            --color-answer-font: ${foreground} !important;
+            --color-answer-background: ${bg0} !important;
+            --color-result-background: ${bg0} !important;
+            --color-result-border: ${bg0} !important;
+            --color-result-url-font: ${foreground} !important;
+            --color-result-vim-selected: #1f1f23cc;
+            --color-result-vim-arrow: ${primary} !important;
+            --color-result-description-highlight-font: ${foreground} !important;
+            --color-result-link-font: ${primary} !important;
+            --color-result-link-font-highlight: ${primary} !important;
+            --color-result-link-visited-font: ${purple} !important;
+            --color-result-publishdate-font: ${grey2} !important;
+            --color-result-engines-font: ${grey2} !important;
+            --color-result-search-url-border: ${bg1} !important;
+            --color-result-search-url-font: ${foreground} !important;
+            --color-result-detail-font: ${foreground} !important;
+            --color-result-detail-label-font: lightgray;
+            --color-result-detail-background: ${bg0}
+            --color-result-detail-hr: ${bg1} !important;
+            --color-result-detail-link: ${primary} !important;
+            --color-result-detail-loader-border: rgba(255, 255, 255, 0.2);
+            --color-result-detail-loader-borderleft: rgba(0, 0, 0, 0);
+            --color-result-image-span-font: ${foreground} !important;
+            --color-result-image-span-font-selected: ${bg0} !important;
+            --color-result-image-background: ${bg0} !important;
+            --color-settings-tr-hover: #2c2c32;
+            --color-settings-engine-description-font: darken(#dcdcdc, 30%);
+            --color-settings-table-group-background: #1b1b21;
+            --color-toolkit-badge-font: ${foreground} !important;
+            --color-toolkit-badge-background: ${bg1} !important;
+            --color-toolkit-kbd-font: #000;
+            --color-toolkit-kbd-background: ${foreground} !important;
+            --color-toolkit-dialog-border: ${bg1} !important;
+            --color-toolkit-dialog-background: ${bg_dim} !important;
+            --color-toolkit-tabs-label-border: ${bg0} !important;
+            --color-toolkit-tabs-section-border: ${bg1} !important;
+            --color-toolkit-select-background: #313338;
+            --color-toolkit-select-border: ${bg1} !important;
+            --color-toolkit-select-background-hover: #373b49;
+            --color-toolkit-input-text-font: ${foreground} !important;
+            --color-toolkit-checkbox-onoff-off-background: #313338;
+            --color-toolkit-checkbox-onoff-on-background: #313338;
+            --color-toolkit-checkbox-onoff-on-mark-background: ${primary} !important;
+            --color-toolkit-checkbox-onoff-on-mark-color: ${bg0} !important;
+            --color-toolkit-checkbox-onoff-off-mark-background: #ddd;
+            --color-toolkit-checkbox-onoff-off-mark-color: ${bg0} !important;
+            --color-toolkit-checkbox-label-background: ${bg0} !important;
+            --color-toolkit-checkbox-label-border: ${bg0} !important;
+            --color-toolkit-checkbox-input-border: ${primary} !important;
+            --color-toolkit-engine-tooltip-border: ${bg0} !important;
+            --color-toolkit-engine-tooltip-background: ${bg0} !important;
+            --color-toolkit-loader-border: rgba(255, 255, 255, 0.2);
+            --color-toolkit-loader-borderleft: rgba(0, 0, 0, 0);
+            --color-doc-code: #ddd;
+            --color-doc-code-background: #4d5a6f;
           }
         }
       '';

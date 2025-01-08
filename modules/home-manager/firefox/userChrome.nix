@@ -43,6 +43,8 @@ with config.theme; {
           --toolbar-bgcolor: ${bg0} !important;
           --tab-font: 'Jetbrains Mono';
           --urlbar-font: 'Jetbrains Mono';
+          --statuspannel-bg: ${bg_dim};
+          --statuspannel-fg: ${foreground};
 
           /* try increasing if you encounter problems */
           --urlbar-height-setting: 24px;
@@ -130,6 +132,30 @@ with config.theme; {
         #appMenu-popup { margin: 0 !important; }
         #customizationui-widget-panel { margin: 0 !important; }
         #unified-extensions-panel { margin: 0 !important; }
+
+        /* --- style statuspanel -------------------------------- */
+         #statuspanel[mirror],
+         #statuspanel:not([mirror]) {
+           left: auto !important;
+           right: 0px !important;
+           top: 0px !important;
+           bottom: auto !important;
+           border-radius: 0px !important;
+           padding-top: 0px !important;
+        }
+
+        #statuspanel-label:not([mirror]),
+        #statuspanel-label[mirror] {
+           color: var(--statuspannel-fg) !important;
+           background-color: var(--statuspannel-bg) !important;
+           border-left-style: none !important;
+           border-top-left-radius: 0px !important;
+           margin-left: 1em !important;
+
+           border-right-style: none !important;
+           border-top-right-radius: 0px !important;
+           margin-right: 0em !important;
+        }
 
         /* --- UNIFIED EXTENSIONS BUTTON ------------------------ */
 
