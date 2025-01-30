@@ -23,7 +23,6 @@
       azure-cli
       cloudflared
       direnv
-      docker
       eza
       fzf
       fzy

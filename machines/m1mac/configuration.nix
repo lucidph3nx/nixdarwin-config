@@ -22,7 +22,6 @@
       azure-cli
       cloudflared
       direnv
-      docker
       eza
       fzf
       fzy
@@ -34,6 +33,7 @@
       jq
       openssh
       p7zip
+      podman
       ripgrep
       rustup
       sops
