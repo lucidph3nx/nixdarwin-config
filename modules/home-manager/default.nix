@@ -4,14 +4,15 @@
   ...
 }: {
   imports = [
+    ./choose.nix
     ./cli
     ./firefox
     ./guiApps
     ./neovim
+    ./qutebrowser
     ./scripts
     ./sops
     ./syncthing.nix
-    ./choose.nix
   ];
   config = {
     homeManagerModules = {
