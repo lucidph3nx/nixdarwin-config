@@ -83,7 +83,7 @@
       reduceTransparency = true;
     };
     NSGlobalDomain = {
-      _HIHideMenuBar = false;
+      _HIHideMenuBar = true;
       InitialKeyRepeat = 14;
       KeyRepeat = 1;
       AppleInterfaceStyle = "Dark";
