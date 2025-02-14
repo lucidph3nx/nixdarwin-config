@@ -102,6 +102,7 @@
       "node"
       "borders" # JankyBorders
       "ripgrep" # for plenary in neovim, it can't find the nix binary
+      "python"
     ];
     taps = [
       "FelixKratz/formulae" # JankyBorders
@@ -113,6 +114,7 @@
       "firefox"
       "karabiner-elements"
       "nikitabobko/tap/aerospace"
+      "qutebrowser"
       "raycast"
       "scroll-reverser"
     ];
