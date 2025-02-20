@@ -17,6 +17,7 @@ with config.theme; {
       escapeTime = 10; # no delay for escape key, vim style
       prefix = "C-a";
       terminal = "xterm-kitty";
+      shell = "${pkgs.zsh}/bin/zsh";
       extraConfig =
         /*
         tmux
