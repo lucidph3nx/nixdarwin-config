@@ -26,6 +26,7 @@
 
           locations=(
             "~/code"
+            "~/code/jarden-digital"
             "~/.config"
           )
           specific_folders=(
