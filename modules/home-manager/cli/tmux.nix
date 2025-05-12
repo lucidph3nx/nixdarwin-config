@@ -23,6 +23,9 @@ with config.theme; {
         tmux
         */
         ''
+          # fix issue where tmux opens with bash
+          set-option -g default-shell "/etc/profiles/per-user/ben/bin/zsh"
+          set-option -g default-command "/etc/profiles/per-user/ben/bin/zsh"
           # appearance
           set -g status-left-length 30
           set -g status-left " [#{session_name}] "
