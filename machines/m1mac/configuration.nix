@@ -17,6 +17,7 @@
   environment = {
     shells = [pkgs.bash pkgs.zsh];
     systemPackages = with pkgs; [
+      auth0-cli
       age
       arping
       azure-cli
