@@ -3,6 +3,9 @@
   lib,
   ...
 }: {
+  home.packages = [
+    pkgs.typescript-language-server
+  ];
   programs.neovim.plugins = [
     {
       plugin = pkgs.vimPlugins.nvim-treesitter.withPlugins (treesitter-plugins:
