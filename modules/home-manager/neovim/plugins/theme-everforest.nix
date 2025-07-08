@@ -50,7 +50,6 @@ in {
               hl["ObsidianRefText"] = {
                 fg = palette.blue,
                 bg = palette.none,
-                underline = true,
               }
               hl["ObsidianExtLinkIcon"] = {
                 fg = palette.blue,

@@ -23,7 +23,6 @@
     ./nvim-tree.nix
     ./obsidian.nix
     ./oil.nix
-    ./symbols-outline.nix
     ./telescope.nix
     ./theme-everforest.nix
     ./theme-github-light.nix

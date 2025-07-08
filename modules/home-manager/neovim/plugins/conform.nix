@@ -19,7 +19,7 @@
             formatters_by_ft = {
               lua = { "stylua" },
               python = { "black" },
-              nix = { "alejandra" },
+          		nix = { "alejandra", "injected" },
               json = { "jq" },
               terraform = { "terraform_fmt" },
             }

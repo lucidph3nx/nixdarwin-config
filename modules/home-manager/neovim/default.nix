@@ -12,7 +12,6 @@
   imports = [
     ./abbreviations.nix
     ./autocmd.nix
-    ./functions.nix
     ./keymaps.nix
     ./options.nix
     ./plugins
