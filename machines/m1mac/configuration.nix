@@ -17,9 +17,9 @@
   environment = {
     shells = [pkgs.bash pkgs.zsh];
     systemPackages = with pkgs; [
-      auth0-cli
       age
       arping
+      auth0-cli
       azure-cli
       cloudflared
       direnv
@@ -29,6 +29,7 @@
       gh
       gnupg
       gnutar
+      go
       htop
       imagemagick
       jq
@@ -84,7 +85,7 @@
       reduceTransparency = true;
     };
     NSGlobalDomain = {
-      _HIHideMenuBar = true;
+      _HIHideMenuBar = false;
       InitialKeyRepeat = 14;
       KeyRepeat = 1;
       AppleInterfaceStyle = "Dark";
