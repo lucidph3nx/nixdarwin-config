@@ -52,6 +52,7 @@
   '';
   fonts.packages = [
     (pkgs.nerdfonts.override {fonts = ["JetBrainsMono"];})
+    pkgs.quicksand
   ];
   security.sudo.extraConfig = ''
     ben ALL=(ALL:ALL) NOPASSWD: ALL
