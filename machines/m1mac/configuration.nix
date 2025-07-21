@@ -22,10 +22,12 @@
       auth0-cli
       azure-cli
       cloudflared
+      pkgs-unstable.copilot-cli
       direnv
       eza
       fzf
       fzy
+      pkgs-unstable.gemini-cli
       gh
       gnupg
       gnutar
@@ -52,7 +54,8 @@
   '';
   fonts.packages = [
     (pkgs.nerdfonts.override {fonts = ["JetBrainsMono"];})
-    pkgs.quicksand
+    pkgs.noto-fonts
+    pkgs.noto-fonts-color-emoji
   ];
   security.sudo.extraConfig = ''
     ben ALL=(ALL:ALL) NOPASSWD: ALL
