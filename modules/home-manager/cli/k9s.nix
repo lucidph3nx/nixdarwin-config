@@ -52,11 +52,11 @@
           thresholds = {
             cpu = {
               critical = 90;
-              warn = 70;
+              warn = 80;
             };
             memory = {
               critical = 90;
-              warn = 70;
+              warn = 80;
             };
           };
         };
