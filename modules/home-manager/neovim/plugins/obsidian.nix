@@ -1,7 +1,7 @@
-{pkgs, ...}: {
+{pkgs, pkgs-unstable, ...}: {
   programs.neovim.plugins = [
     {
-      plugin = pkgs.vimPlugins.obsidian-nvim;
+      plugin = pkgs-unstable.vimPlugins.obsidian-nvim;
       type = "lua";
       config =
         /*
