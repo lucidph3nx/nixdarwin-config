@@ -49,21 +49,22 @@
       zsh
     ];
   };
+  nix.enable = true;
   nix.extraOptions = ''
     experimental-features = nix-command flakes
   '';
-  fonts.packages = [
-    (pkgs.nerdfonts.override {fonts = ["JetBrainsMono"];})
-    pkgs.noto-fonts
-    pkgs.noto-fonts-color-emoji
+  fonts.packages = with pkgs; [
+    nerd-fonts.jetbrains-mono
+    noto-fonts
+    noto-fonts-color-emoji
   ];
   security.sudo.extraConfig = ''
     ben ALL=(ALL:ALL) NOPASSWD: ALL
   '';
   services = {
-    nix-daemon.enable = true;
     karabiner-elements.enable = false;
   };
+  system.primaryUser = "ben";
   system.defaults = {
     finder = {
       AppleShowAllExtensions = true;
