@@ -146,10 +146,10 @@
           	note_id_func = noteIdFunction,
           	notes_subdir = "notes",
           	daily_notes = {
-              folder = "dailies",
-              date_format = "%Y-%m-%d",
-              template = "daily_note.md"
-            },
+          		folder = "dailies",
+          		date_format = "%Y-%m-%d",
+          		template = "daily_note.md",
+          	},
           	templates = {
           		subdir = "templates",
           		substitutions = templateSubstitutions,
@@ -170,7 +170,7 @@
           		img_name_func = imgNameFunction,
           		confirm_img_paste = true,
           	},
-            legacy_commands = false, -- Disable legacy commands
+          	legacy_commands = false, -- Disable legacy commands
           })
 
           -- custom commands for previous and next daily note
