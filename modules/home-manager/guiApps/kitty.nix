@@ -90,7 +90,7 @@ with config.theme; let
     # it will be installed iva brew, but the config set here
     home.file.".config/kitty/kitty.conf" = lib.mkIf config.homeManagerModules.kitty.configOnly {
       text = ''
-        font_family JetBrainsMono Nerd Font Medium
+        font_family JetBrainsMono Nerd Font
         font_size 14.000000
         shell_integration no-rc
         ${kittyconf}
@@ -99,7 +99,7 @@ with config.theme; let
     programs.kitty = lib.mkIf (config.homeManagerModules.kitty.configOnly != true) {
       enable = true;
       font = {
-        name = "JetBrainsMono Nerd Font Medium";
+        name = "JetBrainsMono Nerd Font";
         size = 14.0;
       };
       extraConfig = ''

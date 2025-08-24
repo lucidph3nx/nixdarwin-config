@@ -44,7 +44,7 @@
         '';
     };
     # zsh shortcut for projectSessioniser
-    programs.zsh.initExtra = ''
+    programs.zsh.initContent = ''
       bindkey -s ^f "cli.tmux.projectSessioniser\n"
     '';
     # This script opens a tmux session for a project directory

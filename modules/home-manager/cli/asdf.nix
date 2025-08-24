@@ -16,7 +16,7 @@
       nodejs 20.8.1
       terraform 1.3.6
     '';
-    programs.zsh.initExtra = ''
+    programs.zsh.initContent = ''
       . ${pkgs.asdf-vm}/share/asdf-vm/asdf.sh
     '';
   };

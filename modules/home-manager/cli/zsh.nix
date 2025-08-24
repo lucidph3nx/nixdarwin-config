@@ -77,7 +77,7 @@ in {
         # git pull
         gP = "git pull";
       };
-      initExtra = ''
+      initContent = ''
         # Custom keybindings
         bindkey -s ^v "nvim\n"
         bindkey -s ^p "python\n"
