@@ -27,10 +27,10 @@
           locations=(
             "~/code"
             "~/code/jarden-digital"
-            "~/.config"
+            # "~/.config"
           )
           specific_folders=(
-            "~/.local/scripts/"
+            # "~/.local/scripts/"
             "~/.ssh/"
             "~/documents/obsidian/"
           )
