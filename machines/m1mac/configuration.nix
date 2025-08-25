@@ -28,6 +28,7 @@
       fzf
       fzy
       pkgs-unstable.gemini-cli
+      pkgs-unstable.claude-code
       gh
       gnupg
       gnutar
