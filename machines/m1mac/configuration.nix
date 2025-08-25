@@ -1,6 +1,7 @@
 {
   pkgs,
   pkgs-unstable,
+  pkgs-master,
   inputs,
   ...
 }: {
@@ -27,8 +28,8 @@
       eza
       fzf
       fzy
-      pkgs-unstable.gemini-cli
-      pkgs-unstable.claude-code
+      pkgs-master.gemini-cli
+      pkgs-master.claude-code
       gh
       gnupg
       gnutar
