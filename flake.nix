@@ -8,6 +8,9 @@
     nixpkgs-unstable = {
       url = "github:nixos/nixpkgs/nixos-unstable";
     };
+    nixpkgs-master = {
+      url = "github:nixos/nixpkgs/master";
+    };
 
     # sops
     sops-nix = {
@@ -47,7 +50,14 @@
         specialArgs = {inherit inputs outputs;};
         modules = let
           defaults = {pkgs, ...}: {
-            _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {inherit (pkgs.stdenv.targetPlatform) system;};
+            _module.args.pkgs-unstable = import inputs.nixpkgs-unstable {
+                inherit (pkgs.stdenv.targetPlatform) system; 
+                config.allowUnfree = true;
+              };
+            _module.args.pkgs-master = import inputs.nixpkgs-master {
+                inherit (pkgs.stdenv.targetPlatform) system;
+                config.allowUnfree = true;
+              };
           };
         in [
           defaults
