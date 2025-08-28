@@ -37,9 +37,11 @@
       htop
       imagemagick
       jq
+      pkgs-unstable.opencode
       openssh
       p7zip
       podman
+      pkgs-unstable.vfkit # needed for podman machine start on mac
       ripgrep
       rustup
       sops
