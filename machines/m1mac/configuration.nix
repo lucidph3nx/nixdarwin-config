@@ -37,7 +37,7 @@
       htop
       imagemagick
       jq
-      pkgs-unstable.opencode
+      pkgs-master.opencode
       openssh
       p7zip
       podman
