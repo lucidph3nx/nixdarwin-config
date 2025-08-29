@@ -28,7 +28,7 @@
       eza
       fzf
       fzy
-      pkgs-master.gemini-cli
+      pkgs-unstable.gemini-cli
       pkgs-master.claude-code
       gh
       gnupg
