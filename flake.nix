@@ -46,6 +46,7 @@
         pkgs = import nixpkgs {
           system = "aarch64-darwin";
           config.allowUnfree = true;
+          overlays = [ self.overlays.modifications ];
         };
         specialArgs = {inherit inputs outputs;};
         modules = let
@@ -71,6 +72,7 @@
         pkgs = import nixpkgs {
           system = "aarch64-darwin";
           config.allowUnfree = true;
+          overlays = [ self.overlays.modifications ];
         };
         specialArgs = {inherit inputs outputs;};
         modules = let
@@ -88,6 +90,7 @@
         pkgs = import nixpkgs {
           system = "x86_64-darwin";
           config.allowUnfree = true;
+          overlays = [ self.overlays.modifications ];
         };
         specialArgs = {inherit inputs outputs;};
         modules = let
