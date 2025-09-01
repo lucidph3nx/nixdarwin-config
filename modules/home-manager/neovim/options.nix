@@ -32,6 +32,9 @@
         -- wrap disabled by default (keybind to toggle)
         set.wrap = false
         set.linebreak = true
+        
+        -- don't fold
+        set.foldlevel = 99
 
         -- save undo history
         set.undofile = true
