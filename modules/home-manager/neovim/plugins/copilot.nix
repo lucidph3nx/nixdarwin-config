@@ -13,16 +13,9 @@
         */
         ''
           require('copilot').setup {
+            copilot_node_command = "${pkgs.nodejs_24}/bin/node";
             panel = {
-              enabled = false, -- disabled due to the keymap affecting insert mode
-              auto_refresh = false,
-              layout = {
-                position = "bottom", -- | top | left | right
-                ratio = 0.4
-              },
-              keymap = {
-                open = '<leader>cp',
-              },
+              enabled = false,
             },
             suggestion = {
               enabled = true,
