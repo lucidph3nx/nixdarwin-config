@@ -34,6 +34,7 @@
     EDITOR = "nvim";
     PAGER = "less";
     KUBECONFIG = "${config.sops.secrets.workkube.path}";
+    OBSIDIAN_VAULT_PATH = "/Users/ben/Documents/obsidian";
   };
   home.sessionPath = [
     "/opt/homebrew/bin"
