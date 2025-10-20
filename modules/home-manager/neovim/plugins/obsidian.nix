@@ -242,6 +242,13 @@
           })
 
           vim.opt.conceallevel = 2
+          -- remove default smart action keybind
+          vim.api.nvim_create_autocmd("User", {
+             pattern = "ObsidianNoteEnter",
+             callback = function(ev)
+                pcall(vim.keymap.del, "n", "<CR>", { buffer = ev.buf })
+             end,
+          })
           vim.keymap.set("n", "<leader>od", "<cmd>Obsidian today<cr>", { desc = "[O]bsidian [D]aily note for Today" })
           vim.keymap.set(
           	"n",
