@@ -43,7 +43,20 @@
         map('n', '<C-l>', '<C-w>l', {desc = 'Window go right' })
 
         -- switch to a new session in tmux
-        map('n', '<C-f>', ':!tmux neww cli.tmux.projectSessioniser<CR><CR>', { silent = true, desc = 'switch to a new session in tmux' })
+        map(
+        	"n",
+        	"<C-f>",
+        	":!tmux neww cli.tmux.projectSessioniser<CR><CR>",
+        	{ silent = true, desc = "switch to a new session in tmux" }
+        )
+
+        -- open current project in new kitty window with opencode
+        map(
+        	"n",
+        	"<leader>oa",
+        	":!kitty -d $(pwd) opencode . &<CR><CR>",
+        	{ silent = true, desc = "[O]pen project with [A]I agent" }
+        )
 
         -- keeping these but I don't like how they work, commented out for now
         -- start a replace with current word
