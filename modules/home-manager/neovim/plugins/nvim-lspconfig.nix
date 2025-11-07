@@ -39,8 +39,6 @@
             add_lsp(lspconfig.cssls, {})
             add_lsp(lspconfig.dockerls, {})
             add_lsp(lspconfig.eslint, {})
-            add_lsp(lspconfig.gopls, {})
-            add_lsp(lspconfig.graphql, {})
             add_lsp(lspconfig.helm_ls, {})
             add_lsp(lspconfig.html, {})
             add_lsp(lspconfig.jsonls, {})
@@ -51,7 +49,6 @@
               }}
             })
             add_lsp(lspconfig.pylsp, {})
-            add_lsp(lspconfig.rust_analyzer, {})
             add_lsp(lspconfig.sqlls, {})
             add_lsp(lspconfig.terraformls, {})
             add_lsp(lspconfig.ts_ls, {})

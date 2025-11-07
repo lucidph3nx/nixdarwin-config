@@ -26,15 +26,11 @@
           json
           json5
           jsonc
-          latex
-          mermaid
           lua
           markdown
           nix
           python
-          rust
           scala
-          ssh_config
           sql
           terraform
           tmux
