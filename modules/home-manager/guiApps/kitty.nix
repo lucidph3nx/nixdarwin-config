@@ -6,12 +6,17 @@
 }:
 with config.theme; let 
   kittyconf = ''
+    symbol_map U+1f636,U+200D,U+1F32B,U+FE0F Noto Color Emoji
+    prefer_color_emoji yes
     hide_window_decorations titlebar-only
-    window_margin_width 15
+    window_margin_width 10
+    window_padding_width 0
     confirm_os_window_close 0
     background_opacity 1
     enable_audio_bell no
     paste_actions no-op
+    cursor_trail 1
+    cursor_trail_decay 0.05 0.2
 
     foreground                      ${foreground}
     background                      ${bg0}
