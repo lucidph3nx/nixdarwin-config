@@ -9,16 +9,13 @@
         lua
         */
         ''
-          require('oil').setup {
-            view_options = {
-              show_hidden = true,
-            },
-            -- don't want to disable netrw,
-            -- that causes a bunch of other functionality to break
-            default_file_explorer = false,
-          }
-          vim.keymap.set('n', '-',
-            vim.cmd.Oil, { desc = 'open parent directory' })
+          require("oil").setup({
+          	view_options = {
+          		show_hidden = true,
+          	},
+          	default_file_explorer = true,
+          })
+          vim.keymap.set("n", "-", vim.cmd.Oil, { desc = "open parent directory" })
         '';
     }
   ];
