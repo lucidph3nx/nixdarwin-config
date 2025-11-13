@@ -41,7 +41,6 @@
       openssh
       p7zip
       podman
-      pkgs-unstable.vfkit # needed for podman machine start on mac
       ripgrep
       rustup
       sops
@@ -114,6 +113,7 @@
       "borders" # JankyBorders
       "ripgrep" # for plenary in neovim, it can't find the nix binary
       "python"
+      "vfkit"
     ];
     taps = [
       "FelixKratz/formulae" # JankyBorders
