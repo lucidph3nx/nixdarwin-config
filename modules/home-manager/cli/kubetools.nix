@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-unstable,
   inputs,
   lib,
   ...
@@ -15,7 +16,7 @@
       kubernetes-helm
       kubelogin-oidc
       kubelogin
-      fluxcd
+      pkgs-unstable.fluxcd
       krew
     ];
   };
