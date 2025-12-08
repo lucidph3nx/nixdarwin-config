@@ -156,8 +156,8 @@
           	},
           	new_notes_location = "notes_subdir",
           	wiki_link_func = wikiLinkFunction,
-          	disable_frontmatter = false,
             frontmatter = {
+              enabled = true,
               func = noteFrontmatterFunction,
             },
           	ui = {
