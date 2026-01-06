@@ -8,6 +8,7 @@
 
   theme = {
     name = "everforest";
+    opencodename = "everforest";
     type = "dark";
     foreground = "#d3c6aa";
     primary = "#a7c080";

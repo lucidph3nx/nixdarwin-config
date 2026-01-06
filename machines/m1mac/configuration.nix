@@ -29,7 +29,6 @@
       fzf
       fzy
       pkgs-unstable.gemini-cli
-      pkgs-master.claude-code
       gh
       gnupg
       gnutar
@@ -37,7 +36,6 @@
       htop
       imagemagick
       jq
-      pkgs-master.opencode
       openssh
       p7zip
       podman
@@ -122,6 +120,7 @@
       "1password"
       "1password-cli"
       "bitwarden"
+      "chromium"
       "firefox"
       "karabiner-elements"
       "nikitabobko/tap/aerospace"

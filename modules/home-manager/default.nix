@@ -13,6 +13,7 @@
     ./scripts
     ./sops
     ./syncthing.nix
+    ./opencode
   ];
   config = {
     homeManagerModules = {
@@ -23,6 +24,7 @@
       sops.enable = lib.mkDefault false;
       syncthing.enable = lib.mkDefault true;
       choose.enable = lib.mkDefault true;
+      opencode.enable = lib.mkDefault true;
     };
   };
 }

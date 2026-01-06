@@ -17,6 +17,19 @@ in {
       inputs;
   };
   # Overlays for various pkgs (e.g. broken, not updated)
-  modifications = final: prev: rec {
+  modifications = final: prev: let
+    masterPkgs = import inputs.nixpkgs-master {
+      system = final.stdenv.hostPlatform.system;
+      config.allowUnfree = true;
+    };
+  in rec {
+    # use master for opencode, need the bleeding edge
+    opencode = masterPkgs.opencode;
+
+    # use master for claude-code, need the bleeding edge
+    claude-code = masterPkgs.claude-code;
+
+    # use master for playwright-mcp, not in stable yet
+    playwright-mcp = masterPkgs.playwright-mcp;
   };
 }

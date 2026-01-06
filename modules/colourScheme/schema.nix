@@ -10,6 +10,7 @@ with lib; let
   themeType = types.submodule {
     options = {
       name = mkOption {type = types.str;};
+      opencodename = mkOption {type = types.str;};
       type = mkOption {type = types.str;};
       foreground = mkOption {type = types.str;};
       primary = mkOption {type = types.str;};
