@@ -63,9 +63,9 @@
           		modified = current_time, -- Timestamp for modifications
           	}
 
-          	-- Add "daily-notes" tag if it's a daily note and not already tagged
-          	if is_daily_note and not vim.tbl_contains(note.tags, "daily-notes") then
-          		table.insert(out.tags, "daily-notes")
+          	-- Add "daily-note" tag if it's a daily note and not already tagged
+          	if is_daily_note and not vim.tbl_contains(note.tags, "daily-note") then
+          		table.insert(out.tags, "daily-note")
           	end
 
           	-- Preserve existing metadata first (including existing 'created' if it exists)
