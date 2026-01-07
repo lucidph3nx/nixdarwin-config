@@ -133,7 +133,6 @@
             "gh issue view *" = "allow";
             "gh pr view *" = "allow";
             "gh pr list *" = "allow";
-            "git *" = "allow";
             "git commit *" = "allow";
             "git diff *" = "allow";
             "git push *" = "ask";
