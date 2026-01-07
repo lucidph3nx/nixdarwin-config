@@ -15,7 +15,7 @@
     let
       # Define opencode environment variables in one place
       opencodeEnvVars = {
-        # KUBECONFIG = "$HOME/.config/kube/agents-config";
+        KUBECONFIG = "$HOME/code/azure-kubernetes/kubeconfig/kubeconfig-agents-readonly";
       };
       # Build shell command prefix from env vars
       envPrefix = lib.concatStringsSep " " (
