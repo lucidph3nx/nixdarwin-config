@@ -149,6 +149,8 @@
           		folder = "dailies",
           		date_format = "%Y-%m-%d",
           		template = "daily_note.md",
+              default_tags = { "daily-note" },
+              workdays_only = false,
           	},
           	templates = {
           		subdir = "templates",
@@ -243,12 +245,49 @@
           	desc = "Create and switch to the next daily note based on current buffer",
           })
 
+          -- Custom command to open a random note from the notes folder
+          vim.api.nvim_create_user_command("ObsidianRandomNote", function(_)
+          	local notes_dir = vim.fn.expand("~/documents/obsidian/notes")
+
+          	-- Get all markdown files in the notes directory (non-recursive)
+          	local notes = vim.fn.glob(notes_dir .. "/*.md", false, true)
+
+          	if #notes == 0 then
+          		vim.notify("No notes found in " .. notes_dir, vim.log.levels.WARN)
+          		return
+          	end
+
+          	-- Seed random number generator with current time for better randomness
+          	math.randomseed(os.time())
+
+          	-- Pick a random note
+          	local random_note = notes[math.random(#notes)]
+
+          	-- Open the note
+          	vim.cmd("edit " .. vim.fn.fnameescape(random_note))
+          end, {
+          	bang = false,
+          	bar = false,
+          	register = false,
+          	desc = "Open a random note from the notes folder",
+          })
+
           vim.opt.conceallevel = 2
           -- remove default smart action keybind
-          vim.api.nvim_create_autocmd("User", {
-             pattern = "ObsidianNoteEnter",
+          vim.api.nvim_create_autocmd("FileType", {
+             pattern = "markdown",
              callback = function(ev)
-                pcall(vim.keymap.del, "n", "<CR>", { buffer = ev.buf })
+                -- Use vim.defer_fn to ensure the keymap exists before trying to delete it
+                vim.defer_fn(function()
+                   -- Check if the keymap exists before trying to delete it
+                   local keymaps = vim.api.nvim_buf_get_keymap(ev.buf, "n")
+                   for _, keymap in ipairs(keymaps) do
+                      if keymap.lhs == "<CR>" then
+                         pcall(vim.keymap.del, "n", "<CR>", { buffer = ev.buf })
+                         break
+                      end
+                   end
+                end, 100)
              end,
           })
           vim.keymap.set("n", "<leader>od", "<cmd>Obsidian today<cr>", { desc = "[O]bsidian [D]aily note for Today" })
@@ -261,19 +300,22 @@
           	end,
           	{ desc = "[O]bsidian [Y]esterday note" }
           )
-          vim.keymap.set("n", "<leader>or", function()
+          vim.keymap.set("n", "<leader>odr", function()
           	vim.cmd("Obsidian dailies -30 7")
           end, { desc = "[O]bsidian [R]ecent" })
           -- keybindings for custom commands
           vim.keymap.set("n", "<leader>on", vim.cmd.ObsidianNextDay, { desc = "[O]bsidian [N]ext Daily Note" })
+          vim.keymap.set("n", "<leader>odn", vim.cmd.ObsidianNextDay, { desc = "[O]bsidian [D]aily [N]ext Note" })
           vim.keymap.set("n", "<leader>op", vim.cmd.ObsidianPrevDay, { desc = "[O]bsidian [P]revious Daily Note" })
+          vim.keymap.set("n", "<leader>odp", vim.cmd.ObsidianPrevDay, { desc = "[O]bsidian [D]aily [P]revious Note" })
+          vim.keymap.set("n", "<leader>or", vim.cmd.ObsidianRandomNote, { desc = "[O]bsidian [R]andom Note" })
 
           vim.keymap.set("n", "<leader>ob", "<cmd>Obsidian backlinks<cr>", { desc = "[O]bsidian [B]acklinks" })
           vim.keymap.set("n", "<leader>oc", "<cmd>Obsidian toggle_checkbox<cr>", { desc = "[O]bsidian [C]heckbox" })
           vim.keymap.set("n", "<leader>of", "<cmd>Obsidian follow_link<cr>", { desc = "[O]bsidian [F]ollow" })
           vim.keymap.set("n", "<leader>ol", "<cmd>Obsidian link_new<cr>", { desc = "[O]bsidian [L]ink" })
           vim.keymap.set("n", "<leader>oo", "<cmd>Obsidian open<cr>", { desc = "[O]bsidian [O]pen" })
-          vim.keymap.set("n", "<leader>os", "<cmd>Obsidian search<cr>", { desc = "[O]bsidian [S]earch" })
+          vim.keymap.set("n", "<leader>osn", "<cmd>Obsidian search<cr>", { desc = "[O]bsidian [S]earch [N]otes" })
           vim.keymap.set("n", "<leader>ost", "<cmd>Obsidian tags<cr>", { desc = "[O]bsidian [S]earch [T]ags" })
           vim.keymap.set("n", "<leader>ot", "<cmd>Obsidian template<cr>", { desc = "[O]bsidian [T]emplate" })
         '';
