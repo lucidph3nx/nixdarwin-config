@@ -32,17 +32,34 @@
         # set environment variables for opencode
         opencode = "${envPrefix} opencode";
       };
+      programs.tmux.extraConfig =
+        # tmux
+        ''
+          # new window with opencode
+          bind a new-window -n opencode "${envPrefix} opencode"
+          # opencode scrolling keybinds (only active when opencode is running)
+          # Note: on macOS/darwin, tmux sees opencode as "bun" because the Nix package wraps
+          # the bun binary with a makeBinaryWrapper that sets argv0 to "opencode". While this
+          # makes `ps` and the process name show "opencode", tmux's pane_current_command looks
+          # at the actual executable path, which is still bun. On NixOS, opencode is packaged
+          # differently so pane_current_command returns "opencode" directly.
+          bind -n C-u if-shell '[ "#{pane_current_command}" = "bun" ]' 'send-keys C-M-u' 'send-keys C-u'
+          bind -n C-d if-shell '[ "#{pane_current_command}" = "bun" ]' 'send-keys C-M-d' 'send-keys C-d'
+          bind -n C-g if-shell '[ "#{pane_current_command}" = "bun" ]' 'send-keys Home'
+          bind -n C-M-g if-shell '[ "#{pane_current_command}" = "bun" ]' 'send-keys End'
+        '';
       programs.neovim.extraLuaConfig =
         lib.mkAfter
         # lua
         ''
           -- open current project in new kitty window with opencode
-          vim.keymap.set(
-          	"n",
-          	"<leader>oa",
-          	":!kitty -d $(pwd) env ${envPrefix} opencode . &<CR><CR>",
-          	{ silent = true, desc = "[O]pen project with [A]I agent" }
-          )
+          -- disabled in favor of tmux shortcut (leader a)
+          -- vim.keymap.set(
+          --   "n",
+          --   "<leader>oa",
+          --   ":!kitty -d $(pwd) env ${envPrefix} opencode . &<CR><CR>",
+          --   { silent = true, desc = "[O]pen project with [A]I agent" }
+          -- )
         '';
 
       # Manual configuration generation since programs.opencode is not in stable home-manager
@@ -133,6 +150,10 @@
             "gh issue view *" = "allow";
             "gh pr view *" = "allow";
             "gh pr list *" = "allow";
+            "gh repo view * " = "allow";
+            "gh issue list *" = "allow";
+            "gh release list *" = "allow";
+            "gh release view *" = "allow";
             "git commit *" = "allow";
             "git diff *" = "allow";
             "git push *" = "ask";

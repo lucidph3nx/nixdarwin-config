@@ -25,7 +25,6 @@
     ./telescope.nix
     ./theme-everforest.nix
     ./theme-github-light.nix
-    ./toggleterm.nix
     ./treesitter.nix
     ./undotree.nix
     ./vim-fugitive.nix
