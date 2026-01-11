@@ -13,7 +13,7 @@
     ./scripts
     ./sops
     ./syncthing.nix
-    ./opencode
+    # opencode now managed by prism
   ];
   config = {
     homeManagerModules = {
