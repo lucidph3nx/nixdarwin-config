@@ -1,0 +1,32 @@
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}: {
+  imports = [
+    ./autopairs.nix
+    ./colorizer.nix
+    ./conform.nix
+    ./copilot.nix
+    ./gitsigns.nix
+    ./image.nix
+    ./leap.nix
+    ./lualine.nix
+    ./luasnip.nix
+    ./markdownpreview.nix
+    ./nvim-cmp.nix
+    ./nvim-lspconfig.nix
+    ./nvim-sops.nix
+    ./nvim-tree.nix
+    ./obsidian.nix
+    ./oil.nix
+    ./telescope.nix
+    ./theme-everforest.nix
+    ./theme-github-light.nix
+    ./treesitter.nix
+    ./undotree.nix
+    ./vim-fugitive.nix
+  ];
+}

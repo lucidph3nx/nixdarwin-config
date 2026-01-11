@@ -2,14 +2,20 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: {
-  options = {
-    homeManagerModules.prism.neovim.enable = lib.mkEnableOption "Set up Neovim";
-  };
-  
-  # Placeholder - will be populated in Phase 2
+  imports = [
+    ./abbreviations.nix
+    ./autocmd.nix
+    ./keymaps.nix
+    ./options.nix
+    ./plugins
+  ];
   config = lib.mkIf config.homeManagerModules.prism.neovim.enable {
-    # Neovim configuration will go here
+    programs.neovim = {
+      enable = true;
+      defaultEditor = true;
+    };
   };
 }
