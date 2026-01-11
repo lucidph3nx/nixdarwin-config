@@ -24,8 +24,8 @@
     k9s.enable = lib.mkDefault true;
     kubetools.enable = lib.mkDefault true;
     lf.enable = lib.mkDefault true;
-    tmux.enable = lib.mkDefault true;
-    tmuxSessioniser.enable = lib.mkDefault true;
+    # tmux now managed by prism
+    # tmuxSessioniser now managed by prism
     zsh.enable = lib.mkDefault true;
   };
 }

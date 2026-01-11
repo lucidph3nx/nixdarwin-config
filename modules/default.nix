@@ -6,5 +6,6 @@
   imports = [
     ./home-manager
     ./colourScheme
+    ./programs
   ];
 }

@@ -20,11 +20,11 @@
       # note: firefox is config only
       firefox.enable = lib.mkDefault true;
       guiApps.enable = lib.mkDefault true;
-      neovim.enable = lib.mkDefault true;
+      # neovim now managed by prism
       sops.enable = lib.mkDefault false;
       syncthing.enable = lib.mkDefault true;
       choose.enable = lib.mkDefault true;
-      opencode.enable = lib.mkDefault true;
+      # opencode now managed by prism
     };
   };
 }
