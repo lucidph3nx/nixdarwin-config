@@ -79,20 +79,34 @@
           };
           atlasian = {
             type = "local";
-            # waiting for a way to set permissions properly
-            # currently its only possible to disable or enable individual or wildcarded commands, not set them to 'ask'
+            # problems with instantly filling the context window https://github.com/atlassian/atlassian-mcp-server/issues/17
             enabled = false;
             command = [
               "npx"
               "-y"
               "mcp-remote@0.1.13"
-              "https://mcp.atlassian.com/v1/sse"
+              "https://mcp.atlassian.com/v1/mcp"
             ];
           };
         };
         permission = {
           edit = "allow";
           webfetch = "allow";
+          # Atlassian MCP permissions
+          # fallback to ask
+          "atlasian_*" = "ask";
+          # Read operations (allow)
+          "atlasian_atlassianUserInfo" = "allow";
+          "atlasian_get*" = "allow";
+          "atlasian_lookup*" = "allow";
+          "atlasian_search*" = "allow";
+          "atlasian_fetch" = "allow";
+          # Write operations (ask)
+          "atlasian_create*" = "ask";
+          "atlasian_edit*" = "ask";
+          "atlasian_update*" = "ask";
+          "atlasian_add*" = "ask";
+          "atlasian_transition*" = "ask";
           bash = {
             # default for any command not listed is ask
             "*" = "ask";
