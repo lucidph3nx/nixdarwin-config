@@ -8,12 +8,11 @@
     ./cli
     ./firefox
     ./guiApps
-    ./neovim
     ./qutebrowser
     ./scripts
     ./sops
     ./syncthing.nix
-    # opencode now managed by prism
+    # neovim, opencode now managed by prism
   ];
   config = {
     homeManagerModules = {

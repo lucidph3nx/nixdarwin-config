@@ -152,7 +152,7 @@
         config.xdg.configFile."opencode/config.json".source;
 
       # Copy the command directory
-      xdg.configFile."opencode/command".source = ../../home-manager/opencode/command;
+      xdg.configFile."opencode/command".source = ./opencode/command;
 
       xdg.configFile."opencode/AGENTS.md".text =
         /*

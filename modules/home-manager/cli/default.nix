@@ -12,9 +12,8 @@
     ./k9s.nix
     ./kubetools.nix
     ./lf.nix
-    ./tmux.nix
-    ./tmuxSessioniser.nix
     ./zsh.nix
+    # tmux, tmuxSessioniser now managed by prism
   ];
 
   homeManagerModules = {

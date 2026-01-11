@@ -9,7 +9,7 @@ with config.theme; let
   terminal = "${pkgs.kitty}/bin/kitty";
   choose-options = "-f 'JetbrainsMono Nerd Font' -c '${builtins.substring 1 6 config.theme.green}' -b '${builtins.substring 1 6 config.theme.bg2}' -s 20";
 in {
-  imports = [./cli/tmuxSessioniser.nix]; #needed for one of the choose scripts
+  # tmuxSessioniser now managed by prism
   options = {
     homeManagerModules.choose.enable =
       lib.mkEnableOption "enables choose";
@@ -19,7 +19,8 @@ in {
       # https://github.com/NixOS/nixpkgs/issues/355539
       pkgs-unstable.choose-gui
     ];
-    homeManagerModules.tmuxSessioniser.enable = true;
+    # Ensure prism sessioniser is enabled (provides cli.tmux.projectGetter and projectSessioniser)
+    homeManagerModules.prism.sessioniser.enable = true;
     home.file.".local/scripts/application.nvim.sessionLauncher" = {
       executable = true;
       text =
