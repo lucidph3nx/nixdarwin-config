@@ -13,8 +13,9 @@
         nodejs_24
         # opencode is provided by the overlay using master
         opencode
+        beads
       ];
-      
+
       programs.zsh.shellAliases = {
         # set environment variables for opencode
         opencode = "${envPrefix} opencode";
@@ -68,6 +69,8 @@
           bash = {
             # default for any command not listed is ask
             "*" = "ask";
+            # important tools for agents
+            "bd*" = "allow";
             # we have made sure above that opencode runs with a readonly kubeconfig
             "flux *" = "allow";
             "helm *" = "allow";
@@ -130,6 +133,9 @@
             "git diff *" = "allow";
             "git push *" = "ask";
             "git push" = "ask";
+            "git status*" = "allow";
+            "git add*" = "allow";
+            "git log*" = "allow";
             # file operations that modify
             "mkdir *" = "allow";
             "rm *" = "allow";
@@ -145,6 +151,12 @@
             "podman machine start" = "allow";
           };
         };
+        plugin = [
+          # a plugin to use Gemini auth for LLM access
+          "opencode-gemini-auth@latest"
+          # a plugin for better beads cli support
+          "opencode-beads@latest"
+        ];
       };
 
       # Alias for legacy compatibility if needed

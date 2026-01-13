@@ -31,5 +31,8 @@ in {
 
     # use master for playwright-mcp, not in stable yet
     playwright-mcp = masterPkgs.playwright-mcp;
+
+    # use master for beads, need the bleeding edge
+    beads = masterPkgs.beads;
   };
 }
