@@ -8,7 +8,10 @@
         lua
         */
         ''
-          require('leap').create_default_mappings()
+          -- Set up leap with manual mappings (create_default_mappings is deprecated)
+          vim.keymap.set({'n', 'x', 'o'}, 's',  '<Plug>(leap-forward)')
+          vim.keymap.set({'n', 'x', 'o'}, 'S',  '<Plug>(leap-backward)')
+          vim.keymap.set({'n', 'x', 'o'}, 'gs', '<Plug>(leap-from-window)')
         '';
     }
     {
