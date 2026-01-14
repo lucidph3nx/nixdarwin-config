@@ -17,11 +17,11 @@ in {
 
     programs.zsh = {
       enable = true;
-      dotDir = ".local/share/zsh";
+      dotDir = "${config.xdg.dataHome}/zsh";
       # source the zcompdump from persist if it exists
       # this is to speed up zsh startup in an impermanent environment
       completionInit = let
-        dumpFile = "${homeDir}/.local/share/zsh/.zcompdump";
+        dumpFile = "${config.xdg.dataHome}/zsh/.zcompdump";
       in ''
         autoload -U compinit
         if [[ -f ${dumpFile} ]]; then
