@@ -86,12 +86,10 @@ in
           bind -n C-g if-shell '[ "#{pane_current_command}" = "bun" ]' 'send-keys Home'
           bind -n C-M-g if-shell '[ "#{pane_current_command}" = "bun" ]' 'send-keys End'
           
-          # toggle split layout between edit and agent (Space)
-          bind Space if-shell 'tmux list-windows | grep -q "agent"' \
-            'if-shell "[ #{window_panes} -eq 1 ]" \
-              "select-window -t agent \\; join-pane -h -s agent -t edit.1" \
-              "select-window -t edit \\; break-pane -d -s 1 -n agent"' \
-            'display-message "No agent window found"'
+          # toggle a split pane with edit and agent
+          bind-key Space if-shell "[ $(tmux display-message -t 'edit' -p '#{window_panes}') -gt 1 ]" \
+              "break-pane -s 'edit.1' -n 'agent'" \
+              "join-pane -h -s 'agent.0' -t 'edit'"
           
           # vim style copy
           set -g mode-keys vi
