@@ -170,7 +170,7 @@
           		order = { " ", "x", ">", "~" },
           	},
           	attachments = {
-          		img_folder = "assets",
+          		folder_folder = "assets",
           		img_name_func = imgNameFunction,
           		confirm_img_paste = true,
           	},
