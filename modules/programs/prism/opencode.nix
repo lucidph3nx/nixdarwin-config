@@ -3,8 +3,7 @@
   pkgs,
   lib,
   ...
-}:
-{
+}: {
   config = lib.mkIf config.homeManagerModules.prism.opencode.enable (
     let
       envPrefix = config.homeManagerModules.prism._internal.agentEnvPrefix;
@@ -91,42 +90,45 @@
         The hooks automatically sync beads when your session ends.
       '';
 
-      agentInstructions = /* markdown */ ''
-        # Global Agent Instructions
+      agentInstructions =
+        /*
+        markdown
+        */
+        ''
+          # Global Agent Instructions
 
-        ## Skills
-        When working in environments with domain-specific skills available (via the `skill` tool), err on the side of loading them. If a conversation touches a domain that has a skill, load it – even if you think you know the conventions from other context sources.
-        Skills exist to prevent context drift and ensure consistency, not just for when you're uncertain. Loading a skill is cheap; missing domain-specific conventions or creating inconsistency is expensive.
+          ## Skills
+          When working in environments with domain-specific skills available (via the `skill` tool), err on the side of loading them. If a conversation touches a domain that has a skill, load it – even if you think you know the conventions from other context sources.
+          Skills exist to prevent context drift and ensure consistency, not just for when you're uncertain. Loading a skill is cheap; missing domain-specific conventions or creating inconsistency is expensive.
 
-        ## Web Fetching
+          ## Web Fetching
 
-        When the `webfetch` tool fails with a 403 Forbidden error or similar access restrictions, use a subagent with Playwright to fetch the content with a real browser instead.
+          When the `webfetch` tool fails with a 403 Forbidden error or similar access restrictions, use a subagent with Playwright to fetch the content with a real browser instead.
 
-        ### Usage
+          ### Usage
 
-        If webfetch returns a 403 error:
-        ```
-        Error: HTTP 403 Forbidden
-        ```
+          If webfetch returns a 403 error:
+          ```
+          Error: HTTP 403 Forbidden
+          ```
 
-        Do NOT use the playwright_* tools directly in the main conversation, as they generate very large outputs that quickly fill the context window.
+          Do NOT use the playwright_* tools directly in the main conversation, as they generate very large outputs that quickly fill the context window.
 
-        Instead, use the Task tool to launch a subagent that will use Playwright to extract the content and return only the relevant information:
-        ```
-        Launch a general subagent with a prompt like:
-        "Use the Playwright MCP server to navigate to [URL], extract [specific content needed], and return only the extracted information as markdown. Do not include full page snapshots or accessibility trees in your response to me."
-        ```
+          Instead, use the Task tool to launch a subagent that will use Playwright to extract the content and return only the relevant information:
+          ```
+          Launch a general subagent with a prompt like:
+          "Use the Playwright MCP server to navigate to [URL], extract [specific content needed], and return only the extracted information as markdown. Do not include full page snapshots or accessibility trees in your response to me."
+          ```
 
-        The subagent will handle all the verbose Playwright interactions in its own context, and only return the clean, extracted content back to you.
+          The subagent will handle all the verbose Playwright interactions in its own context, and only return the clean, extracted content back to you.
 
-        ## Local Environment Instructions
+          ## Local Environment Instructions
 
-        Avoid excessive use of `cd` commands at the start of your commands, if you are already in the right working directory, there is no need to `cd` into it before your command.
+          Avoid excessive use of `cd` commands at the start of your commands, if you are already in the right working directory, there is no need to `cd` into it before your command.
 
-        Use podman, not docker. Before use, always run `podman machine start`
-      '';
-    in
-    {
+          Use podman, not docker. Before use, always run `podman machine start`
+        '';
+    in {
       home.packages = with pkgs; [
         # need npx on path for MCP servers
         nodejs_24
@@ -141,18 +143,20 @@
       };
 
       # Manual configuration generation since programs.opencode is not in stable home-manager
-      xdg.configFile."opencode/config.json".text = builtins.toJSON {
-        "$schema" = "https://opencode.ai/config.json";
-        theme = config.theme.opencodename;
-        agent = {
-          soku = {
-            description = "Beads workflow agent with automated context loading";
-            mode = "primary";
-            prompt = sokuPrompt;
-            color = config.theme.orange;
-            model = "github-copilot/claude-haiku-4.5";
-            permission = {
-              bash = "allow";
+      programs.opencode = {
+        enable = true;
+        settings = {
+          theme = config.theme.opencodename;
+          agent = {
+            soku = {
+              description = "Beads workflow agent with automated context loading";
+              mode = "primary";
+              prompt = sokuPrompt;
+              color = config.theme.orange;
+              model = "github-copilot/claude-haiku-4.5";
+              permission = {
+                bash = "allow";
+              };
             };
           };
           mcp = {
@@ -284,8 +288,6 @@
           plugin = [
             # a plugin to use Gemini auth for LLM access
             "opencode-gemini-auth@latest"
-            # local plugin for soku beads workflow integration
-            "./plugin/soku-hooks.js"
           ];
         };
         rules = agentInstructions;
