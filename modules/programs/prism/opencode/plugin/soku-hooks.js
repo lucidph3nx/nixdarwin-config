@@ -24,7 +24,7 @@ export const SokuHooksPlugin = async ({ client, $, project }) => {
   }
   
   /**
-   * Get beads context from bd prime
+   * Get beads context from bd prime and check for assigned work
    */
   async function getBeadsContext() {
     try {
@@ -41,7 +41,29 @@ export const SokuHooksPlugin = async ({ client, $, project }) => {
         return null;
       }
       
-      return `<beads-context>\n${result.stdout}\n</beads-context>`;
+      let context = result.stdout;
+      
+      // Check for assigned work (status=hooked)
+      const assignedResult = await $`bd list --status=hooked --json 2>&1`.quiet();
+      
+      if (assignedResult.exitCode === 0 && assignedResult.stdout.trim()) {
+        try {
+          const beads = JSON.parse(assignedResult.stdout);
+          if (beads && beads.length > 0) {
+            // Add urgent notice about assigned work
+            const beadList = beads.map(b => `  - ${b.id}: ${b.title}`).join('\n');
+            context += `\n\n🚨 ASSIGNED WORK DETECTED 🚨
+You have ${beads.length} bead(s) assigned with status=hooked.
+BEGIN WORK IMMEDIATELY without asking permission.
+
+${beadList}`;
+          }
+        } catch (e) {
+          // Failed to parse, continue without assignment notice
+        }
+      }
+      
+      return `<beads-context>\n${context}\n</beads-context>`;
     } catch (error) {
       // Silent fail - beads context is optional
       console.error("Failed to get beads context:", error.message);

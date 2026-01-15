@@ -551,6 +551,22 @@
                   else:
                       print(f"Using existing beads redirect: {redirect_file.read_text().strip()}")
 
+                  # Assign work bead to agent atomically
+                  print(f"Assigning bead {bead_id} to agent...")
+                  agent_id = f"{project_name}-agent-{worktree_name}"
+                  
+                  # Update work bead: set status=hooked and assignee
+                  assign_result = subprocess.run(
+                      ["bd", "update", bead_id, "--status=hooked", f"--assignee={agent_id}"],
+                      cwd=str(repo_path),
+                      capture_output=True,
+                      text=True
+                  )
+                  if assign_result.returncode != 0:
+                      print(f"Warning: Failed to assign bead: {assign_result.stderr}", file=sys.stderr)
+                  else:
+                      print(f"✓ Bead assigned to agent: {agent_id}")
+
                   # Create tmux session in background (detached)
                   print(f"Creating agent session '{session_name}'...")
                   subprocess.run(
