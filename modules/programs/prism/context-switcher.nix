@@ -535,7 +535,7 @@
                       if not result:
                           print(f"Error: Failed to create worktree for {bead_id}", file=sys.stderr)
                           sys.exit(1)
-                      worktree_path = Path(result)
+                       worktree_path = Path(result)
                    else:
                        print(f"Using existing worktree: {worktree_path}")
 
