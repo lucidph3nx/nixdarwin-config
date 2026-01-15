@@ -25,6 +25,15 @@
       xdg.configFile."opencode/config.json".text = builtins.toJSON {
         "$schema" = "https://opencode.ai/config.json";
         theme = config.theme.opencodename;
+        agent = {
+          soku = {
+            description = "Beads workflow agent with automated context loading";
+            mode = "primary";
+            prompt = "You are the soku agent - a specialized agent for working with beads workflow management. The beads context will be automatically loaded when your session starts.";
+            color = config.theme.orange;
+            model = "github-copilot/claude-haiku-4.5";
+          };
+        };
         mcp = {
           playwright = {
             type = "local";
@@ -154,8 +163,8 @@
         plugin = [
           # a plugin to use Gemini auth for LLM access
           "opencode-gemini-auth@latest"
-          # a plugin for better beads cli support
-          "opencode-beads@latest"
+          # local plugin for soku beads workflow integration
+          "./plugin/soku-hooks.js"
         ];
       };
 
@@ -165,6 +174,9 @@
 
       # Copy the command directory
       xdg.configFile."opencode/command".source = ./opencode/command;
+
+      # Copy the plugin directory for local plugins
+      xdg.configFile."opencode/plugin".source = ./opencode/plugin;
 
       xdg.configFile."opencode/AGENTS.md".text =
         /*
