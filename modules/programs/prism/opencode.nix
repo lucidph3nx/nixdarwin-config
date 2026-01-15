@@ -113,6 +113,9 @@
             '';
             color = config.theme.orange;
             model = "github-copilot/claude-haiku-4.5";
+            permission = {
+              bash = "allow";
+            };
           };
         };
         mcp = {

@@ -531,48 +531,48 @@
                   worktree_path = Path(repo_path) / bead_id
                   if not worktree_path.is_dir():
                       print(f"Creating worktree for {bead_id}...")
-                       result = create_worktree(repo_path, bead_id)
-                       if not result:
-                           print(f"Error: Failed to create worktree for {bead_id}", file=sys.stderr)
-                           sys.exit(1)
-                       worktree_path = Path(result)
-                   else:
-                       print(f"Using existing worktree: {worktree_path}")
+                      result = create_worktree(repo_path, bead_id)
+                      if not result:
+                          print(f"Error: Failed to create worktree for {bead_id}", file=sys.stderr)
+                          sys.exit(1)
+                      worktree_path = Path(result)
+                  else:
+                      print(f"Using existing worktree: {worktree_path}")
 
-                   # Setup shared beads via redirect file
-                   bare_path = Path(repo_path) / ".bare"
-                   beads_dir = worktree_path / ".beads"
-                   beads_dir.mkdir(exist_ok=True)
-                   
-                   redirect_file = beads_dir / "redirect"
-                   if not redirect_file.exists():
-                       print(f"Setting up shared beads via redirect...")
-                       # Find default branch name dynamically
-                       default_ref = subprocess.run(
-                           ["${git}", "--git-dir", str(bare_path), "symbolic-ref", "refs/remotes/origin/HEAD"],
-                           capture_output=True,
-                           text=True
-                       )
-                       
-                       if default_ref.returncode == 0:
-                           default_branch = default_ref.stdout.strip().split('/')[-1]
-                       else:
-                           # Fallback to main or master
-                           for branch in ["main", "master"]:
-                               check = subprocess.run(
-                                   ["${git}", "--git-dir", str(bare_path), "rev-parse", "--verify", f"refs/heads/{branch}"],
-                                   capture_output=True
-                               )
-                               if check.returncode == 0:
-                                   default_branch = branch
-                                   break
-                           else:
-                               default_branch = "main"  # Final fallback
-                       
-                       # Point to default branch worktree's .beads directory
-                       redirect_file.write_text(f"../{default_branch}/.beads\n")
-                   else:
-                       print(f"Using existing beads redirect: {redirect_file.read_text().strip()}")
+                  # Setup shared beads via redirect file
+                  bare_path = Path(repo_path) / ".bare"
+                  beads_dir = worktree_path / ".beads"
+                  beads_dir.mkdir(exist_ok=True)
+                  
+                  redirect_file = beads_dir / "redirect"
+                  if not redirect_file.exists():
+                      print(f"Setting up shared beads via redirect...")
+                      # Find default branch name dynamically
+                      default_ref = subprocess.run(
+                          ["${git}", "--git-dir", str(bare_path), "symbolic-ref", "refs/remotes/origin/HEAD"],
+                          capture_output=True,
+                          text=True
+                      )
+                      
+                      if default_ref.returncode == 0:
+                          default_branch = default_ref.stdout.strip().split('/')[-1]
+                      else:
+                          # Fallback to main or master
+                          for branch in ["main", "master"]:
+                              check = subprocess.run(
+                                  ["${git}", "--git-dir", str(bare_path), "rev-parse", "--verify", f"refs/heads/{branch}"],
+                                  capture_output=True
+                              )
+                              if check.returncode == 0:
+                                  default_branch = branch
+                                  break
+                          else:
+                              default_branch = "main"  # Final fallback
+                      
+                      # Point to default branch worktree's .beads directory
+                      redirect_file.write_text(f"../{default_branch}/.beads\n")
+                  else:
+                      print(f"Using existing beads redirect: {redirect_file.read_text().strip()}")
 
                   # Assign work bead to agent atomically
                   print(f"Assigning bead {bead_id} to agent...")
