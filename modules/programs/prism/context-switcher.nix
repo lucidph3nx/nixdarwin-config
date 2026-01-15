@@ -531,10 +531,10 @@
                   worktree_path = Path(repo_path) / bead_id
                   if not worktree_path.is_dir():
                       print(f"Creating worktree for {bead_id}...")
-                      result = create_worktree(repo_path, bead_id)
-                      if not result:
-                          print(f"Error: Failed to create worktree for {bead_id}", file=sys.stderr)
-                          sys.exit(1)
+                       result = create_worktree(repo_path, bead_id)
+                       if not result:
+                           print(f"Error: Failed to create worktree for {bead_id}", file=sys.stderr)
+                           sys.exit(1)
                        worktree_path = Path(result)
                    else:
                        print(f"Using existing worktree: {worktree_path}")
