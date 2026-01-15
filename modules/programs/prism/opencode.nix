@@ -3,11 +3,130 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.homeManagerModules.prism.opencode.enable (
     let
       envPrefix = config.homeManagerModules.prism._internal.agentEnvPrefix;
-    in {
+      sokuPrompt = ''
+        You are the soku agent - a specialized worker agent for beads workflow management.
+
+        ## 🚨 YOUR ROLE 🚨
+
+        You work on a SINGLE assigned bead until complete. NO browsing for other work. NO getting distracted by other issues.
+
+        ## STARTUP PROTOCOL
+
+        When you start, beads context is AUTOMATICALLY injected via hooks.
+
+        **If you see "ASSIGNED WORK DETECTED" in your context:**
+        → BEGIN WORK IMMEDIATELY without asking permission
+        → DO NOT wait for human confirmation
+        → This is the "propulsion principle": If work is assigned, YOU RUN IT
+
+        **Check your assigned bead:**
+        ```bash
+        bd show <bead-id> --json
+        ```
+
+        ## CLAIMING WORK
+
+        When you begin working, claim the bead:
+        ```bash
+        bd update <bead-id> --status=in_progress
+        ```
+
+        ## DOING WORK
+
+        - Follow the bead's description and requirements
+        - Make commits as you progress: `git add . && git commit -m "..."`
+        - If you discover NEW work, create child beads with dependencies:
+          ```bash
+          bd create --title="..." --type=task --priority=2
+          bd dep add <new-bead> <parent-bead>
+          ```
+        - DO NOT work on discovered issues yourself - file them and stay focused
+
+        ## 🚨 COMPLETION PROTOCOL 🚨
+
+        When your work is done, follow this EXACT checklist:
+
+        [ ] 1. Ensure all changes are committed
+        [ ] 2. Close the bead: `bd close <bead-id>`
+        [ ] 3. Push your branch: `git push -u origin <branch-name>`
+        [ ] 4. Create PR with meaningful summary:
+            ```bash
+            gh pr create \
+              --title "Brief description of what you did" \
+              --body "## Summary
+        - List the changes made
+        - Explain why they were needed
+
+        Closes <bead-id>"
+            ```
+
+            **CRITICAL:** Review your commits before creating PR.
+            - Title describes WHAT you did (e.g., "Add shared beads via redirect files")
+            - Body explains WHY and lists key changes
+            - Must include "Closes <bead-id>" for traceability
+
+        [ ] 5. Exit session
+
+        **Your work is NOT complete until the PR is created.** The local branch is not landed.
+
+        ## FORBIDDEN BEHAVIORS
+
+        - DO NOT browse for other work while assigned to a bead
+        - DO NOT work on unassigned beads
+        - DO NOT ask permission to start if work is assigned via hook
+        - DO NOT skip PR creation - the work is not landed without it
+        - DO NOT get distracted by other issues - file them as beads and continue
+
+        ## LIFECYCLE
+
+        - **Session**: Your OpenCode instance (ephemeral, can restart)
+        - **Sandbox**: Your git worktree (persists across session restarts)
+        - **Beads**: Shared database via redirect file (all agents see same state)
+
+        The hooks automatically sync beads when your session ends.
+      '';
+
+      agentInstructions = /* markdown */ ''
+        # Global Agent Instructions
+
+        ## Skills
+        When working in environments with domain-specific skills available (via the `skill` tool), err on the side of loading them. If a conversation touches a domain that has a skill, load it – even if you think you know the conventions from other context sources.
+        Skills exist to prevent context drift and ensure consistency, not just for when you're uncertain. Loading a skill is cheap; missing domain-specific conventions or creating inconsistency is expensive.
+
+        ## Web Fetching
+
+        When the `webfetch` tool fails with a 403 Forbidden error or similar access restrictions, use a subagent with Playwright to fetch the content with a real browser instead.
+
+        ### Usage
+
+        If webfetch returns a 403 error:
+        ```
+        Error: HTTP 403 Forbidden
+        ```
+
+        Do NOT use the playwright_* tools directly in the main conversation, as they generate very large outputs that quickly fill the context window.
+
+        Instead, use the Task tool to launch a subagent that will use Playwright to extract the content and return only the relevant information:
+        ```
+        Launch a general subagent with a prompt like:
+        "Use the Playwright MCP server to navigate to [URL], extract [specific content needed], and return only the extracted information as markdown. Do not include full page snapshots or accessibility trees in your response to me."
+        ```
+
+        The subagent will handle all the verbose Playwright interactions in its own context, and only return the clean, extracted content back to you.
+
+        ## Local Environment Instructions
+
+        Avoid excessive use of `cd` commands at the start of your commands, if you are already in the right working directory, there is no need to `cd` into it before your command.
+
+        Use podman, not docker. Before use, always run `podman machine start`
+      '';
+    in
+    {
       home.packages = with pkgs; [
         # need npx on path for MCP servers
         nodejs_24
@@ -21,282 +140,160 @@
         opencode = "${envPrefix} opencode";
       };
 
-      # Manual configuration generation since programs.opencode is not in stable home-manager
-      xdg.configFile."opencode/config.json".text = builtins.toJSON {
-        "$schema" = "https://opencode.ai/config.json";
-        theme = config.theme.opencodename;
-        agent = {
-          soku = {
-            description = "Beads workflow agent with automated context loading";
-            mode = "primary";
-            prompt = ''
-              You are the soku agent - a specialized worker agent for beads workflow management.
-              
-              ## 🚨 YOUR ROLE 🚨
-              
-              You work on a SINGLE assigned bead until complete. NO browsing for other work. NO getting distracted by other issues.
-              
-              ## STARTUP PROTOCOL
-              
-              When you start, beads context is AUTOMATICALLY injected via hooks.
-              
-              **If you see "ASSIGNED WORK DETECTED" in your context:**
-              → BEGIN WORK IMMEDIATELY without asking permission
-              → DO NOT wait for human confirmation
-              → This is the "propulsion principle": If work is assigned, YOU RUN IT
-              
-              **Check your assigned bead:**
-              ```bash
-              bd show <bead-id> --json
-              ```
-              
-              ## CLAIMING WORK
-              
-              When you begin working, claim the bead:
-              ```bash
-              bd update <bead-id> --status=in_progress
-              ```
-              
-              ## DOING WORK
-              
-              - Follow the bead's description and requirements
-              - Make commits as you progress: `git add . && git commit -m "..."`
-              - If you discover NEW work, create child beads with dependencies:
-                ```bash
-                bd create --title="..." --type=task --priority=2
-                bd dep add <new-bead> <parent-bead>
-                ```
-              - DO NOT work on discovered issues yourself - file them and stay focused
-              
-              ## 🚨 COMPLETION PROTOCOL 🚨
-              
-              When your work is done, follow this EXACT checklist:
-              
-              [ ] 1. Ensure all changes are committed
-              [ ] 2. Close the bead: `bd close <bead-id>`
-              [ ] 3. Push your branch: `git push -u origin <branch-name>`
-              [ ] 4. Create PR with meaningful summary:
-                  ```bash
-                  gh pr create \
-                    --title "Brief description of what you did" \
-                    --body "## Summary
-              - List the changes made
-              - Explain why they were needed
-              
-              Closes <bead-id>"
-                  ```
-                  
-                  **CRITICAL:** Review your commits before creating PR.
-                  - Title describes WHAT you did (e.g., "Add shared beads via redirect files")
-                  - Body explains WHY and lists key changes
-                  - Must include "Closes <bead-id>" for traceability
-              
-              [ ] 5. Exit session
-              
-              **Your work is NOT complete until the PR is created.** The local branch is not landed.
-              
-              ## FORBIDDEN BEHAVIORS
-              
-              - DO NOT browse for other work while assigned to a bead
-              - DO NOT work on unassigned beads
-              - DO NOT ask permission to start if work is assigned via hook
-              - DO NOT skip PR creation - the work is not landed without it
-              - DO NOT get distracted by other issues - file them as beads and continue
-              
-              ## LIFECYCLE
-              
-              - **Session**: Your OpenCode instance (ephemeral, can restart)
-              - **Sandbox**: Your git worktree (persists across session restarts)
-              - **Beads**: Shared database via redirect file (all agents see same state)
-              
-              The hooks automatically sync beads when your session ends.
-            '';
-            color = config.theme.orange;
-            model = "github-copilot/claude-haiku-4.5";
+      programs.opencode = {
+        enable = true;
+        settings = {
+          theme = config.theme.opencodename;
+          agent = {
+            soku = {
+              description = "Beads workflow agent with automated context loading";
+              mode = "primary";
+              prompt = sokuPrompt;
+              color = config.theme.orange;
+              model = "github-copilot/claude-haiku-4.5";
+            };
           };
+          mcp = {
+            playwright = {
+              type = "local";
+              command = [
+                "${pkgs.playwright-mcp}/bin/mcp-server-playwright"
+                "--executable-path"
+                "/Applications/Chromium.app/Contents/MacOS/Chromium"
+                "--headless"
+              ];
+              enabled = true;
+            };
+            atlasian = {
+              type = "local";
+              # problems with instantly filling the context window https://github.com/atlassian/atlassian-mcp-server/issues/17
+              enabled = false;
+              command = [
+                "npx"
+                "-y"
+                "mcp-remote@0.1.13"
+                "https://mcp.atlassian.com/v1/mcp"
+              ];
+            };
+          };
+          permission = {
+            edit = "allow";
+            webfetch = "allow";
+            # Atlassian MCP permissions
+            # fallback to ask
+            "atlasian_*" = "ask";
+            # Read operations (allow)
+            "atlasian_atlassianUserInfo" = "allow";
+            "atlasian_get*" = "allow";
+            "atlasian_lookup*" = "allow";
+            "atlasian_search*" = "allow";
+            "atlasian_fetch" = "allow";
+            # Write operations (ask)
+            "atlasian_create*" = "ask";
+            "atlasian_edit*" = "ask";
+            "atlasian_update*" = "ask";
+            "atlasian_add*" = "ask";
+            "atlasian_transition*" = "ask";
+            bash = {
+              # default for any command not listed is ask
+              "*" = "ask";
+              # important tools for agents
+              "bd*" = "allow";
+              # we have made sure above that opencode runs with a readonly kubeconfig
+              "flux *" = "allow";
+              "helm *" = "allow";
+              "kubectl *" = "allow";
+              "helm dependency update" = "allow";
+              "helm template *" = "allow";
+              # file reading/viewing
+              "cat *" = "allow";
+              "head *" = "allow";
+              "less *" = "allow";
+              "more *" = "allow";
+              "tail *" = "allow";
+              # file/directory listing
+              "file *" = "allow";
+              "find *" = "allow";
+              "ls *" = "allow";
+              "tree *" = "allow";
+              # text processing/searching
+              "awk *" = "allow";
+              "comm *" = "allow";
+              "cut *" = "allow";
+              "diff *" = "allow";
+              "grep *" = "allow";
+              "rg *" = "allow";
+              "sed *" = "allow";
+              "sort *" = "allow";
+              "uniq *" = "allow";
+              "wc *" = "allow";
+              # system information (read-only)
+              "date *" = "allow";
+              "env *" = "allow";
+              "hostname *" = "allow";
+              "id *" = "allow";
+              "printenv *" = "allow";
+              "pwd *" = "allow";
+              "uname *" = "allow";
+              "whoami *" = "allow";
+              # json/yaml processing
+              "jq *" = "allow";
+              "yq *" = "allow";
+              "yq eval *" = "allow";
+              # utilities
+              "basename *" = "allow";
+              "command *" = "allow";
+              "dirname *" = "allow";
+              "echo *" = "allow";
+              "printf *" = "allow";
+              "sleep *" = "allow";
+              "type *" = "allow";
+              "which *" = "allow";
+              # git and gh commands
+              "gh issue view *" = "allow";
+              "gh pr view *" = "allow";
+              "gh pr list *" = "allow";
+              "gh repo view * " = "allow";
+              "gh issue list *" = "allow";
+              "gh release list *" = "allow";
+              "gh release view *" = "allow";
+              "git commit *" = "allow";
+              "git diff *" = "allow";
+              "git push *" = "ask";
+              "git push" = "ask";
+              "git status*" = "allow";
+              "git add*" = "allow";
+              "git log*" = "allow";
+              # file operations that modify
+              "mkdir *" = "allow";
+              "rm *" = "allow";
+              "mv *" = "allow";
+              # nix commands
+              "nh os build" = "allow";
+              "nh os switch" = "ask";
+              "nix build *" = "allow";
+              "nix flake check *" = "allow";
+              "nixfmt *" = "allow";
+              # other dev tools
+              "npm *" = "allow";
+              "podman machine start" = "allow";
+            };
+          };
+          plugin = [
+            # a plugin to use Gemini auth for LLM access
+            "opencode-gemini-auth@latest"
+            # local plugin for soku beads workflow integration
+            "./plugin/soku-hooks.js"
+          ];
         };
-        mcp = {
-          playwright = {
-            type = "local";
-            command = [
-              "${pkgs.playwright-mcp}/bin/mcp-server-playwright"
-              "--executable-path"
-              "/Applications/Chromium.app/Contents/MacOS/Chromium"
-              "--headless"
-            ];
-            enabled = true;
-          };
-          atlasian = {
-            type = "local";
-            # problems with instantly filling the context window https://github.com/atlassian/atlassian-mcp-server/issues/17
-            enabled = false;
-            command = [
-              "npx"
-              "-y"
-              "mcp-remote@0.1.13"
-              "https://mcp.atlassian.com/v1/mcp"
-            ];
-          };
-        };
-        permission = {
-          edit = "allow";
-          webfetch = "allow";
-          # Atlassian MCP permissions
-          # fallback to ask
-          "atlasian_*" = "ask";
-          # Read operations (allow)
-          "atlasian_atlassianUserInfo" = "allow";
-          "atlasian_get*" = "allow";
-          "atlasian_lookup*" = "allow";
-          "atlasian_search*" = "allow";
-          "atlasian_fetch" = "allow";
-          # Write operations (ask)
-          "atlasian_create*" = "ask";
-          "atlasian_edit*" = "ask";
-          "atlasian_update*" = "ask";
-          "atlasian_add*" = "ask";
-          "atlasian_transition*" = "ask";
-          bash = {
-            # default for any command not listed is ask
-            "*" = "ask";
-            # important tools for agents
-            "bd*" = "allow";
-            # we have made sure above that opencode runs with a readonly kubeconfig
-            "flux *" = "allow";
-            "helm *" = "allow";
-            "kubectl *" = "allow";
-            "helm dependency update" = "allow";
-            "helm template *" = "allow";
-            # file reading/viewing
-            "cat *" = "allow";
-            "head *" = "allow";
-            "less *" = "allow";
-            "more *" = "allow";
-            "tail *" = "allow";
-            # file/directory listing
-            "file *" = "allow";
-            "find *" = "allow";
-            "ls *" = "allow";
-            "tree *" = "allow";
-            # text processing/searching
-            "awk *" = "allow";
-            "comm *" = "allow";
-            "cut *" = "allow";
-            "diff *" = "allow";
-            "grep *" = "allow";
-            "rg *" = "allow";
-            "sed *" = "allow";
-            "sort *" = "allow";
-            "uniq *" = "allow";
-            "wc *" = "allow";
-            # system information (read-only)
-            "date *" = "allow";
-            "env *" = "allow";
-            "hostname *" = "allow";
-            "id *" = "allow";
-            "printenv *" = "allow";
-            "pwd *" = "allow";
-            "uname *" = "allow";
-            "whoami *" = "allow";
-            # json/yaml processing
-            "jq *" = "allow";
-            "yq *" = "allow";
-            "yq eval *" = "allow";
-            # utilities
-            "basename *" = "allow";
-            "command *" = "allow";
-            "dirname *" = "allow";
-            "echo *" = "allow";
-            "printf *" = "allow";
-            "sleep *" = "allow";
-            "type *" = "allow";
-            "which *" = "allow";
-            # git and gh commands
-            "gh issue view *" = "allow";
-            "gh pr view *" = "allow";
-            "gh pr list *" = "allow";
-            "gh repo view * " = "allow";
-            "gh issue list *" = "allow";
-            "gh release list *" = "allow";
-            "gh release view *" = "allow";
-            "git commit *" = "allow";
-            "git diff *" = "allow";
-            "git push *" = "ask";
-            "git push" = "ask";
-            "git status*" = "allow";
-            "git add*" = "allow";
-            "git log*" = "allow";
-            # file operations that modify
-            "mkdir *" = "allow";
-            "rm *" = "allow";
-            "mv *" = "allow";
-            # nix commands
-            "nh os build" = "allow";
-            "nh os switch" = "ask";
-            "nix build *" = "allow";
-            "nix flake check *" = "allow";
-            "nixfmt *" = "allow";
-            # other dev tools
-            "npm *" = "allow";
-            "podman machine start" = "allow";
-          };
-        };
-        plugin = [
-          # a plugin to use Gemini auth for LLM access
-          "opencode-gemini-auth@latest"
-          # local plugin for soku beads workflow integration
-          "./plugin/soku-hooks.js"
-        ];
+        rules = agentInstructions;
       };
-
-      # Alias for legacy compatibility if needed
-      xdg.configFile."opencode/opencode.json".source =
-        config.xdg.configFile."opencode/config.json".source;
 
       # Copy the command directory
       xdg.configFile."opencode/command".source = ./opencode/command;
 
       # Copy the plugin directory for local plugins
       xdg.configFile."opencode/plugin".source = ./opencode/plugin;
-
-      xdg.configFile."opencode/AGENTS.md".text =
-        /*
-        markdown
-        */
-        ''
-          # Global Agent Instructions
-
-          ## Skills
-          When working in environments with domain-specific skills available (via the `skill` tool), err on the side of loading them. If a conversation touches a domain that has a skill, load it – even if you think you know the conventions from other context sources.
-          Skills exist to prevent context drift and ensure consistency, not just for when you're uncertain. Loading a skill is cheap; missing domain-specific conventions or creating inconsistency is expensive.
-
-          ## Web Fetching
-
-          When the `webfetch` tool fails with a 403 Forbidden error or similar access restrictions, use a subagent with Playwright to fetch the content with a real browser instead.
-
-          ### Usage
-
-          If webfetch returns a 403 error:
-          ```
-          Error: HTTP 403 Forbidden
-          ```
-
-          Do NOT use the playwright_* tools directly in the main conversation, as they generate very large outputs that quickly fill the context window.
-
-          Instead, use the Task tool to launch a subagent that will use Playwright to extract the content and return only the relevant information:
-          ```
-          Launch a general subagent with a prompt like:
-          "Use the Playwright MCP server to navigate to [URL], extract [specific content needed], and return only the extracted information as markdown. Do not include full page snapshots or accessibility trees in your response to me."
-          ```
-
-          The subagent will handle all the verbose Playwright interactions in its own context, and only return the clean, extracted content back to you.
-
-          ## Local Environment Instructions
-
-          Avoid excessive use of `cd` commands at the start of your commands, if you are already in the right working directory, there is no need to `cd` into it before your command.
-
-          Use podman, not docker. Before use, always run `podman machine start`
-        '';
     }
   );
 }
