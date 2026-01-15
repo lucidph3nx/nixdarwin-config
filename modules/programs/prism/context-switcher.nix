@@ -539,18 +539,17 @@
                   else:
                       print(f"Using existing worktree: {worktree_path}")
 
-                  # Initialize beads database in worktree if needed
-                  beads_db = worktree_path / ".beads" / "beads.db"
-                  if not beads_db.exists():
-                      print(f"Initializing beads database...")
-                      init_result = subprocess.run(
-                          ["bd", "init"],
-                          cwd=str(worktree_path),
-                          capture_output=True,
-                          text=True
-                      )
-                      if init_result.returncode != 0:
-                          print(f"Warning: bd init failed: {init_result.stderr}", file=sys.stderr)
+                  # Setup shared beads via redirect file
+                  beads_dir = worktree_path / ".beads"
+                  beads_dir.mkdir(exist_ok=True)
+                  
+                  redirect_file = beads_dir / "redirect"
+                  if not redirect_file.exists():
+                      print(f"Setting up shared beads via redirect...")
+                      # Point to parent repo's .beads directory (../../.beads)
+                      redirect_file.write_text("../../.beads\n")
+                  else:
+                      print(f"Using existing beads redirect: {redirect_file.read_text().strip()}")
 
                   # Create tmux session in background (detached)
                   print(f"Creating agent session '{session_name}'...")

@@ -82,6 +82,33 @@ export const SokuHooksPlugin = async ({ client, $, project }) => {
     }
   }
   
+  /**
+   * Sync beads on session end
+   */
+  async function syncBeads() {
+    try {
+      if (!isBeadsRepo()) {
+        return;
+      }
+      
+      const result = await $`bd sync 2>&1`.quiet();
+      
+      if (result.exitCode === 0) {
+        await client.app.log({
+          service: "soku-hooks",
+          level: "info",
+          message: "Synced beads on session end",
+        });
+      }
+    } catch (error) {
+      await client.app.log({
+        service: "soku-hooks",
+        level: "error",
+        message: `Failed to sync beads: ${error.message}`,
+      });
+    }
+  }
+  
   return {
     /**
      * Hook: session.created
@@ -97,6 +124,14 @@ export const SokuHooksPlugin = async ({ client, $, project }) => {
      */
     "session.compacted": async ({ session }) => {
       await injectBeadsContext(session.id);
+    },
+    
+    /**
+     * Hook: session.ended
+     * Sync beads when session ends
+     */
+    "session.ended": async ({ session }) => {
+      await syncBeads();
     },
   };
 };
