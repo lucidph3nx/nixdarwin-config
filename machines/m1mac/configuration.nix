@@ -18,6 +18,7 @@
   environment = {
     shells = [pkgs.bash pkgs.zsh];
     systemPackages = with pkgs; [
+      # pkgs-master.aerospace
       age
       arping
       auth0-cli
@@ -35,10 +36,12 @@
       go
       htop
       imagemagick
+      jankyborders
       jq
       openssh
       p7zip
       podman
+      raycast
       ripgrep
       rustup
       sops
@@ -105,16 +108,21 @@
   };
   homebrew = {
     enable = true;
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "uninstall";
+      upgrade = true;
+    };
     brews = [
       # "int128/kubelogin/kubelogin"
       "node"
-      "borders" # JankyBorders
+      # "borders" # JankyBorders
       "ripgrep" # for plenary in neovim, it can't find the nix binary
       "python"
       "vfkit"
     ];
     taps = [
-      "FelixKratz/formulae" # JankyBorders
+      # "FelixKratz/formulae" # JankyBorders
     ];
     casks = [
       "1password"
@@ -125,7 +133,7 @@
       "karabiner-elements"
       "nikitabobko/tap/aerospace"
       "qutebrowser"
-      "raycast"
+      # "raycast"
       "scroll-reverser"
     ];
   };
