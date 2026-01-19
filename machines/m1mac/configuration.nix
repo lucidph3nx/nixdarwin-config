@@ -41,7 +41,6 @@
       openssh
       p7zip
       podman
-      raycast
       ripgrep
       rustup
       sops
@@ -133,7 +132,7 @@
       "karabiner-elements"
       "nikitabobko/tap/aerospace"
       "qutebrowser"
-      # "raycast"
+      "raycast"
       "scroll-reverser"
     ];
   };
