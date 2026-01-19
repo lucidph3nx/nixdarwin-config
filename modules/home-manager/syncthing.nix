@@ -14,9 +14,6 @@
     # this is for nix-darwin setups
     services.syncthing = {
       enable = true;
-      extraOptions = [
-        "--no-default-folder"
-      ];
     };
   };
 }
