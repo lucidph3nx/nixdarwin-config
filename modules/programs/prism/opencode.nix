@@ -7,6 +7,109 @@
   config = lib.mkIf config.homeManagerModules.prism.opencode.enable (
     let
       envPrefix = config.homeManagerModules.prism._internal.agentEnvPrefix;
+      
+      # Define read-only bash commands that can be shared across agents
+      readOnlyBashCommands = {
+        # file reading/viewing
+        "cat *" = "allow";
+        "head *" = "allow";
+        "less *" = "allow";
+        "more *" = "allow";
+        "tail *" = "allow";
+        # file/directory listing and searching
+        "file *" = "allow";
+        "find *" = "allow";
+        "ls *" = "allow";
+        "tree *" = "allow";
+        # text processing/searching
+        "awk *" = "allow";
+        "comm *" = "allow";
+        "cut *" = "allow";
+        "diff *" = "allow";
+        "grep *" = "allow";
+        "rg *" = "allow";
+        "sed *" = "allow";
+        "sort *" = "allow";
+        "uniq *" = "allow";
+        "wc *" = "allow";
+        # system information (read-only)
+        "date *" = "allow";
+        "env *" = "allow";
+        "hostname *" = "allow";
+        "id *" = "allow";
+        "printenv *" = "allow";
+        "pwd *" = "allow";
+        "uname *" = "allow";
+        "whoami *" = "allow";
+        # json/yaml processing
+        "jq *" = "allow";
+        "yq *" = "allow";
+        "yq eval *" = "allow";
+        # utilities
+        "basename *" = "allow";
+        "command *" = "allow";
+        "dirname *" = "allow";
+        "echo *" = "allow";
+        "printf *" = "allow";
+        "sleep *" = "allow";
+        "type *" = "allow";
+        "which *" = "allow";
+        # git read operations
+        "git diff *" = "allow";
+        "git status*" = "allow";
+        "git log*" = "allow";
+        "git show*" = "allow";
+        "git branch*" = "allow";
+        # GitHub CLI read operations
+        "gh issue view *" = "allow";
+        "gh pr view *" = "allow";
+        "gh pr list *" = "allow";
+        "gh repo view * " = "allow";
+        "gh issue list *" = "allow";
+        "gh release list *" = "allow";
+        "gh release view *" = "allow";
+        # Kubernetes read operations
+        "kubectl get*" = "allow";
+        "kubectl describe*" = "allow";
+        "kubectl logs*" = "allow";
+        "flux *" = "allow";
+        "helm template *" = "allow";
+        # Nix read operations
+        "nix flake show*" = "allow";
+        "nix flake metadata*" = "allow";
+        "nix build *" = "allow";
+        "nix flake check *" = "allow";
+        # Beads read operations
+        "bd show*" = "allow";
+        "bd list*" = "allow";
+      };
+      
+      # Additional write operations for build agent
+      writeBashCommands = {
+        # git write operations
+        "git commit *" = "allow";
+        "git add*" = "allow";
+        "git push *" = "ask";
+        "git push" = "ask";
+        # file operations that modify
+        "mkdir *" = "allow";
+        "rm *" = "allow";
+        "mv *" = "allow";
+        # nix commands that modify
+        "nh os build" = "allow";
+        "nh os switch" = "ask";
+        "nixfmt *" = "allow";
+        # other dev tools
+        "npm *" = "allow";
+        "podman machine start" = "allow";
+        # Kubernetes write operations
+        "helm *" = "allow";
+        "kubectl *" = "allow";
+        "helm dependency update" = "allow";
+        # Beads write operations
+        "bd*" = "allow";
+      };
+      
       sokuPrompt = ''
         You are the soku agent - a specialized worker agent for beads workflow management.
 
@@ -158,6 +261,37 @@
                 bash = "allow";
               };
             };
+            build = {
+              description = "Default build agent with full tool access";
+              mode = "primary";
+              permission = {
+                bash = {
+                  # default for any command not listed is ask (MUST be first - last match wins)
+                  "*" = "ask";
+                } // readOnlyBashCommands // writeBashCommands;
+              };
+            };
+            plan = {
+              description = "Planning and analysis agent with read-only access";
+              mode = "primary";
+              tools = {
+                read = true;
+                grep = true;
+                glob = true;
+                list = true;
+                webfetch = true;
+                bash = true;
+                # Disable write operations
+                write = false;
+                edit = false;
+              };
+              permission = {
+                bash = {
+                  # Default deny everything else for plan agent (MUST be first - last match wins)
+                  "*" = "deny";
+                } // readOnlyBashCommands;
+              };
+            };
           };
           mcp = {
             playwright = {
@@ -166,7 +300,7 @@
                 "${pkgs.playwright-mcp}/bin/mcp-server-playwright"
                 "--executable-path"
                 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-                "--headless"
+                # "--headless"
               ];
               enabled = true;
             };
@@ -200,90 +334,11 @@
             "atlasian_update*" = "ask";
             "atlasian_add*" = "ask";
             "atlasian_transition*" = "ask";
+            # Bash permissions are now defined per-agent
             bash = {
-              # default for any command not listed is ask
+              # default for any command not listed is ask (MUST be first - last match wins)
               "*" = "ask";
-              # important tools for agents
-              "bd*" = "allow";
-              # we have made sure above that opencode runs with a readonly kubeconfig
-              "flux *" = "allow";
-              "helm *" = "allow";
-              "kubectl *" = "allow";
-              "helm dependency update" = "allow";
-              "helm template *" = "allow";
-              # file reading/viewing
-              "cat *" = "allow";
-              "head *" = "allow";
-              "less *" = "allow";
-              "more *" = "allow";
-              "tail *" = "allow";
-              # file/directory listing
-              "file *" = "allow";
-              "find *" = "allow";
-              "ls *" = "allow";
-              "tree *" = "allow";
-              # text processing/searching
-              "awk *" = "allow";
-              "comm *" = "allow";
-              "cut *" = "allow";
-              "diff *" = "allow";
-              "grep *" = "allow";
-              "rg *" = "allow";
-              "sed *" = "allow";
-              "sort *" = "allow";
-              "uniq *" = "allow";
-              "wc *" = "allow";
-              # system information (read-only)
-              "date *" = "allow";
-              "env *" = "allow";
-              "hostname *" = "allow";
-              "id *" = "allow";
-              "printenv *" = "allow";
-              "pwd *" = "allow";
-              "uname *" = "allow";
-              "whoami *" = "allow";
-              # json/yaml processing
-              "jq *" = "allow";
-              "yq *" = "allow";
-              "yq eval *" = "allow";
-              # utilities
-              "basename *" = "allow";
-              "command *" = "allow";
-              "dirname *" = "allow";
-              "echo *" = "allow";
-              "printf *" = "allow";
-              "sleep *" = "allow";
-              "type *" = "allow";
-              "which *" = "allow";
-              # git and gh commands
-              "gh issue view *" = "allow";
-              "gh pr view *" = "allow";
-              "gh pr list *" = "allow";
-              "gh repo view * " = "allow";
-              "gh issue list *" = "allow";
-              "gh release list *" = "allow";
-              "gh release view *" = "allow";
-              "git commit *" = "allow";
-              "git diff *" = "allow";
-              "git push *" = "ask";
-              "git push" = "ask";
-              "git status*" = "allow";
-              "git add*" = "allow";
-              "git log*" = "allow";
-              # file operations that modify
-              "mkdir *" = "allow";
-              "rm *" = "allow";
-              "mv *" = "allow";
-              # nix commands
-              "nh os build" = "allow";
-              "nh os switch" = "ask";
-              "nix build *" = "allow";
-              "nix flake check *" = "allow";
-              "nixfmt *" = "allow";
-              # other dev tools
-              "npm *" = "allow";
-              "podman machine start" = "allow";
-            };
+            } // readOnlyBashCommands // writeBashCommands;
           };
           plugin = [
             # a plugin to use Gemini auth for LLM access
