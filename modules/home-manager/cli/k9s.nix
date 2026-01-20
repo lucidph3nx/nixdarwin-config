@@ -61,7 +61,7 @@
           };
         };
       };
-      aliases.aliases = {
+      aliases = {
         cr = "clusterroles";
         crb = "clusterrolebindings";
         dp = "deployments";
@@ -74,7 +74,7 @@
         ro = "roles";
         sec = "v1/secrets";
       };
-      views.views = {
+      views = {
         "v1/pods" = {
           columns = [
             "AGE"
