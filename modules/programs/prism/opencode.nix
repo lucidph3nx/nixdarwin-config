@@ -165,7 +165,7 @@
               command = [
                 "${pkgs.playwright-mcp}/bin/mcp-server-playwright"
                 "--executable-path"
-                "/Applications/Chromium.app/Contents/MacOS/Chromium"
+                "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
                 "--headless"
               ];
               enabled = true;

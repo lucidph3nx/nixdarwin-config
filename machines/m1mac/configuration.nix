@@ -127,7 +127,6 @@
       "1password"
       "1password-cli"
       "bitwarden"
-      "chromium"
       "firefox"
       "karabiner-elements"
       "nikitabobko/tap/aerospace"
