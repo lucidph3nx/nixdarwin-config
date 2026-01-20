@@ -13,7 +13,7 @@
       agent.envVars = lib.mkOption {
         type = lib.types.attrsOf lib.types.str;
         default = {
-          KUBECONFIG = "$HOME/code/azure-kubernetes/kubeconfig/kubeconfig-agents-readonly";
+          KUBECONFIG = "$HOME/code/azure-kubernetes/main/kubeconfig/kubeconfig-agents-readonly";
         };
         description = "Environment variables to pass to the AI agent (opencode)";
       };
