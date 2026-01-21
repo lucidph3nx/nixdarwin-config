@@ -1,9 +1,120 @@
 {
   config,
   pkgs,
+  pkgs-unstable,
   lib,
   ...
-}: {
+}: let
+  bitwarden-userscript-unwrapped = pkgs.writers.writePython3Bin "bitwarden-unwrapped" {
+    flakeIgnore = [
+      "E126"
+      "E302"
+      "E501"
+      "E402"
+      "E265"
+      "W503"
+      "W293"
+    ];
+    libraries = with pkgs.python3Packages; [
+      tldextract
+      pyperclip
+    ];
+  } (builtins.readFile ./userscripts/bitwarden);
+  
+  # Wrapper that provides default macOS dmenu/password prompt paths and loads Bitwarden password
+  bitwarden-userscript = pkgs.writeShellScriptBin "bitwarden" ''
+    # Get the directory where this script is located (the userscripts directory)
+    SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+    
+    # Add bitwarden-cli to PATH
+    export PATH="${pkgs.bitwarden-cli}/bin:$PATH"
+    
+    # Default to macOS-specific tools if not overridden
+    # Escape spaces in path for shlex.split() compatibility
+    SCRIPT_DIR_ESCAPED="''${SCRIPT_DIR// /\\ }"
+    DMENU_DEFAULT="$SCRIPT_DIR_ESCAPED/macos-dmenu -p Bitwarden"
+    PASSWORD_PROMPT_DEFAULT="$SCRIPT_DIR_ESCAPED/macos-password-prompt -p Master_Password"
+    
+    # Load Bitwarden password from sops secret if available and not already set
+    if [ -z "$BITWARDEN_PASSWORD" ]; then
+      BW_SECRET_PATH="${config.sops.secrets.bitwarden_password.path}"
+      if [ -f "$BW_SECRET_PATH" ]; then
+        export BITWARDEN_PASSWORD="$(cat "$BW_SECRET_PATH")"
+      fi
+    fi
+    
+    # Build arguments array
+    ARGS=()
+    HAS_DMENU=0
+    HAS_PASSWORD=0
+    
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --dmenu-invocation|-d)
+          HAS_DMENU=1
+          ARGS+=("$1" "$2")
+          shift 2
+          ;;
+        --password-prompt-invocation|-p)
+          HAS_PASSWORD=1
+          ARGS+=("$1" "$2")
+          shift 2
+          ;;
+        *)
+          ARGS+=("$1")
+          shift
+          ;;
+      esac
+    done
+    
+    # Add defaults if not provided
+    if [ $HAS_DMENU -eq 0 ]; then
+      ARGS+=("--dmenu-invocation" "$DMENU_DEFAULT")
+    fi
+    if [ $HAS_PASSWORD -eq 0 ]; then
+      ARGS+=("--password-prompt-invocation" "$PASSWORD_PROMPT_DEFAULT")
+    fi
+    
+    exec ${bitwarden-userscript-unwrapped}/bin/bitwarden-unwrapped "''${ARGS[@]}"
+  '';
+  bitwarden-prefetch = pkgs.writers.writePython3Bin "bitwarden-prefetch" {
+    flakeIgnore = [
+      "E501"
+      "E265"
+      "E302"
+      "W292"
+    ];
+    libraries = with pkgs.python3Packages; [];
+  } (builtins.readFile ./userscripts/bitwarden-prefetch);
+  
+  # macOS-specific helper scripts  
+  macos-dmenu = pkgs.writeShellScriptBin "macos-dmenu" ''
+    # macOS dmenu replacement using choose-gui (native GUI, keyboard-friendly)
+    # choose-gui reads from stdin and outputs selection to stdout, just like dmenu
+    ${pkgs-unstable.choose-gui}/bin/choose -f 'JetbrainsMono Nerd Font' -c '${builtins.substring 1 6 config.theme.green}' -b '${builtins.substring 1 6 config.theme.bg2}' -s 20
+  '';
+  
+  macos-password-prompt = pkgs.writeShellScriptBin "macos-password-prompt" ''
+    # macOS password prompt using osascript
+    
+    # Extract the prompt from arguments (look for -p flag)
+    prompt="Enter Password"
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -p)
+                prompt="$2"
+                shift 2
+                ;;
+            *)
+                shift
+                ;;
+        esac
+    done
+    
+    # Show password dialog
+    /usr/bin/osascript -e "text returned of (display dialog \"$prompt\" default answer \"\" with hidden answer)" 2>/dev/null
+  '';
+in {
   imports = [
     ./colours.nix
     ./greasemonkey.nix
@@ -77,8 +188,8 @@
           "{}"
         ];
         fonts = {
-          default_family = "JetBrainsMono Nerd Font";
-          default_size = "10pt";
+          default_family = "Noto Sans Medium";
+          default_size = "12pt";
         };
         # false beacuse it causes a weird colour shift
         # https://github.com/qutebrowser/qutebrowser/issues/5528
@@ -148,6 +259,8 @@
         "gg" = "https://google.com/search?hl=en&q={}";
         "gh" = "https://github.com/search?q={}";
         "ghnx" = "https://github.com/search?q={}+language%3ANix&type=code&l=Nix";
+        "gm" = "https://www.google.com/maps/search/{}";
+        "goodreads" = "https://www.goodreads.com/search?q={}";
         "hm" = "https://home-manager-options.extranix.com/?query={}";
         "nixopt" = "https://search.nixos.org/options?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={}";
         "nixpkgs" = "https://search.nixos.org/packages?channel=unstable&from=0&size=50&sort=relevance&type=packages&query={}";
@@ -158,8 +271,38 @@
         "yt" = "https://www.youtube.com/results?search_query={}";
       };
     };
+    
+    # Add bitwarden-cli to packages so it's available globally
+    home.packages = [
+      pkgs.bitwarden-cli
+    ];
+    
+    # macOS launchd service to prefetch bitwarden cache periodically
+    launchd.agents.bitwarden-prefetch = {
+      enable = true;
+      config = {
+        ProgramArguments = [
+          "${pkgs.writeShellScript "bitwarden-prefetch-wrapper" ''
+            export PATH="${pkgs.bitwarden-cli}/bin:$PATH"
+            export BITWARDEN_PASSWORD="$(cat ${config.sops.secrets.bitwarden_password.path})"
+            exec ${bitwarden-prefetch}/bin/bitwarden-prefetch
+          ''}"
+        ];
+        StartInterval = 1800; # Run every 30 minutes (1800 seconds)
+        RunAtLoad = true; # Run on login
+        StandardOutPath = "/tmp/bitwarden-prefetch.log";
+        StandardErrorPath = "/tmp/bitwarden-prefetch.error.log";
+      };
+    };
+    
     home.file."Library/Application Support/qutebrowser/userscripts/bitwarden" = {
-      source = ./userscripts/bitwarden;
+      source = "${bitwarden-userscript}/bin/bitwarden";
+    };
+    home.file."Library/Application Support/qutebrowser/userscripts/macos-dmenu" = {
+      source = "${macos-dmenu}/bin/macos-dmenu";
+    };
+    home.file."Library/Application Support/qutebrowser/userscripts/macos-password-prompt" = {
+      source = "${macos-password-prompt}/bin/macos-password-prompt";
     };
     home.file."Library/Application Support/qutebrowser/userscripts/open-firefox" = {
       source = ./userscripts/open-firefox;

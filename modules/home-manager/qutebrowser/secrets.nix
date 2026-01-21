@@ -15,8 +15,5 @@
         sopsFile = ./secrets/bitwarden.sops.yaml;
       };
     };
-    home.sessionVariables = {
-      BITWARDEN_PASSWORD = "$(cat ${config.sops.secrets.bitwarden_password.path})";
-    };
   };
 }

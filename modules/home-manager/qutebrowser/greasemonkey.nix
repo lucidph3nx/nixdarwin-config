@@ -85,6 +85,19 @@
         name = "searx.css.js";
         text = builtins.readFile ./greasemonkey/searx.css.js;
       })
+      # style for reddit
+      (pkgs.writeTextFile {
+        name = "reddit.css.js";
+        text = builtins.readFile ./greasemonkey/reddit.css.js;
+      })
+      (pkgs.writeTextFile {
+        name = "reddit_custom_header.js";
+        text = builtins.readFile ./greasemonkey/reddit_custom_header.js;
+      })
+      (pkgs.writeTextFile {
+        name = "reddit_custom_footernix-pr-tracker.js";
+        text = builtins.readFile ./greasemonkey/nix-pr-tracker.js;
+      })
     ];
   };
 }

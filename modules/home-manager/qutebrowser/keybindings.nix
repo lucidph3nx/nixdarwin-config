@@ -12,6 +12,8 @@
       normal = {
         # unbind
         "<Ctrl-h>" = "nop";
+        "M" = "nop";
+        "m" = "nop";
         # close tabs left and right
         "ch" = "tab-only --next";
         "cl" = "tab-only --prev";
@@ -24,7 +26,7 @@
         "E" = "cmd-set-text :open -t {url:pretty}";
         # edit text
         "<Ctrl-e>" = "edit-text";
-        # bitwarden bindings
+        # bitwarden bindings (wrapper auto-provides macOS dmenu and password prompts)
         "<Space>ll" = "spawn --userscript bitwarden --totp";
         "<Space>lu" = "spawn --userscript bitwarden --username-only";
         "<Space>lp" = "spawn --userscript bitwarden --password-only";

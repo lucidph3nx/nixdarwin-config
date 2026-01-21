@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# macOS dmenu replacement using osascript (choose from list dialog)
+
+# Read all lines from stdin
+mapfile -t lines
+
+# Extract the prompt from arguments (look for -p flag)
+prompt="Select an option"
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -p)
+            prompt="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
+
+# If no input, exit
+if [ ${#lines[@]} -eq 0 ]; then
+    exit 1
+fi
+
+# Convert array to AppleScript list format
+applescript_list=""
+for line in "${lines[@]}"; do
+    # Escape quotes in the line
+    escaped_line="${line//\"/\\\"}"
+    applescript_list+="\"$escaped_line\", "
+done
+applescript_list="${applescript_list%, }"  # Remove trailing comma
+
+# Show choose from list dialog
+result=$(osascript -e "choose from list {$applescript_list} with prompt \"$prompt\"" 2>/dev/null)
+
+# Exit code 1 if user cancelled
+if [ "$result" = "false" ]; then
+    exit 1
+fi
+
+# Output the selected item
+echo "$result"
