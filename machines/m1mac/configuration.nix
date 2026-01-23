@@ -104,6 +104,16 @@
       NSWindowShouldDragOnGesture = true;
       NSAutomaticWindowAnimationsEnabled = false;
     };
+    # Fix CMD+Q not working in Electron apps (Plexamp)
+    # This is a workaround for Electron apps not properly handling macOS keyboard shortcuts
+    # See: https://github.com/electron/electron/issues/7165
+    CustomUserPreferences = {
+      "tv.plex.plexamp" = {
+        NSUserKeyEquivalents = {
+          "Quit Plexamp" = "@q";
+        };
+      };
+    };
   };
   homebrew = {
     enable = true;
@@ -135,6 +145,13 @@
       "scroll-reverser"
     ];
   };
+
+  # Activation scripts
+  system.activationScripts.extraActivation.text = ''
+    # Set Cmd+Q shortcut for Plexamp (Electron app workaround)
+    # Run as user since defaults needs to write to user preferences
+    sudo -u ben /usr/bin/defaults write tv.plex.plexamp NSUserKeyEquivalents -dict-add "Quit Plexamp" "@q"
+  '';
 
   # Home Manager
   home-manager = {

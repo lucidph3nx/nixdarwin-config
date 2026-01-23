@@ -756,17 +756,10 @@
             ]
           },
           {
-            "conditions": [
-              {
-                "bundle_identifiers": [
-                  "^com\\.mozilla\\.firefox$"
-                ],
-                "type": "frontmost_application_if"
-              }
-            ],
-            "description": "Close window with Command+Q, not whole application (App specific)",
+            "description": "Map Command+Q to Command+W for apps that use CMD+W to close windows",
             "manipulators": [
               {
+                "type": "basic",
                 "from": {
                   "key_code": "q",
                   "modifiers": {
@@ -783,7 +776,16 @@
                     ]
                   }
                 ],
-                "type": "basic"
+                "conditions": [
+                  {
+                    "type": "frontmost_application_if",
+                    "bundle_identifiers": [
+                      "^com\\.mozilla\\.firefox$",
+                      "^net\\.kovidgoyal\\.kitty$",
+                      "^com\\.microsoft\\.edgemac$"
+                    ]
+                  }
+                ]
               }
             ]
           }

@@ -14,6 +14,8 @@
         "<Ctrl-h>" = "nop";
         "M" = "nop";
         "m" = "nop";
+        # Explicitly bind Meta+Q (Command on macOS) to quit
+        "<Meta-q>" = "quit";
         # close tabs left and right
         "ch" = "tab-only --next";
         "cl" = "tab-only --prev";
