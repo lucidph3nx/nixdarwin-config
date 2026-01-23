@@ -306,14 +306,14 @@
             };
             atlasian = {
               type = "local";
-              # problems with instantly filling the context window https://github.com/atlassian/atlassian-mcp-server/issues/17
-              enabled = false;
+              enabled = true;
               command = [
-                "npx"
-                "-y"
-                "mcp-remote@0.1.13"
-                "https://mcp.atlassian.com/v1/mcp"
+                "${config.home.homeDirectory}/.config/opencode/mcp-atlassian-slim-proxy.mjs"
               ];
+              environment = {
+                ATLASSIAN_MCP_URL = "https://mcp.atlassian.com/v1/mcp";
+                # MCP_SLIM_DISABLE can be set in shell to disable slimming (defaults to false/enabled)
+              };
             };
           };
           permission = {
@@ -352,7 +352,13 @@
       xdg.configFile."opencode/command".source = ./opencode/command;
 
       # Copy the plugin directory for local plugins
-      xdg.configFile."opencode/plugin".source = ./opencode/plugin;
+      xdg.configFile."opencode/plugins".source = ./opencode/plugin;
+
+      # Copy the MCP proxy script
+      xdg.configFile."opencode/mcp-atlassian-slim-proxy.mjs" = {
+        source = ./opencode/mcp-atlassian-slim-proxy.mjs;
+        executable = true;
+      };
     }
   );
 }
