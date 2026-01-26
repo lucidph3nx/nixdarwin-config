@@ -179,14 +179,6 @@ in {
             "en-AU"
           ];
         };
-        editor.command = [
-          "${pkgs.kitty}/bin/kitty"
-          "--class"
-          "qute-editor"
-          "-e"
-          "nvim"
-          "{}"
-        ];
         fonts = {
           default_family = "Noto Sans Medium";
           default_size = "12pt";
@@ -205,27 +197,6 @@ in {
           last_close = "close";
         };
         hints.radius = 0; # no rounded corners on hints
-        fileselect = {
-          handler = "external";
-          single_file.command = [
-            "${pkgs.kitty}/bin/kitty"
-            "--class"
-            "qute-filepicker"
-            "-e"
-            "${pkgs.lf}/bin/lf"
-            "-selection-path"
-            "{}"
-          ];
-          multiple_files.command = [
-            "${pkgs.kitty}/bin/kitty"
-            "--class"
-            "qute-filepicker"
-            "-e"
-            "${pkgs.lf}/bin/lf"
-            "-selection-path"
-            "{}"
-          ];
-        };
       };
       extraConfig =
         /*
