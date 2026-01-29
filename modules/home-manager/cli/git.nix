@@ -31,7 +31,7 @@ in {
           user = "git";
           hostname = "github.com";
           port = 22;
-          identityFile = "${homeDir}/.ssh/lucidph3nx-ed25519";
+          identityFile = "${homeDir}/.ssh/prismatic-koi-ed25519";
         };
       };
     };
@@ -41,9 +41,9 @@ in {
         {
           contents = {
             user = {
-              name = "lucidph3nx";
+              name = "prismatic-koi";
               email = "ben@tinfoilforest.nz";
-              signingKey = "${homeDir}/.ssh/lucidph3nx-ed25519-signingkey.pub";
+              signingKey = "${homeDir}/.ssh/prismatic-koi-ed25519-signingkey.pub";
             };
             push = {
               autoSetupRemote = true;

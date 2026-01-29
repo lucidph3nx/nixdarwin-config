@@ -13,12 +13,12 @@
     sops.secrets = let
       sopsFile = ../../../secrets/signingKeys.yaml;
     in {
-      "ssh/lucidph3nx-ed25519-signingkey" = {
-        path = "${config.home.homeDirectory}/.ssh/lucidph3nx-ed25519-signingkey";
+      "ssh/prismatic-koi-ed25519-signingkey" = {
+        path = "${config.home.homeDirectory}/.ssh/prismatic-koi-ed25519-signingkey";
         sopsFile = sopsFile;
       };
-      "ssh/lucidph3nx-ed25519-signingkey.pub" = {
-        path = "${config.home.homeDirectory}/.ssh/lucidph3nx-ed25519-signingkey.pub";
+      "ssh/prismatic-koi-ed25519-signingkey.pub" = {
+        path = "${config.home.homeDirectory}/.ssh/prismatic-koi-ed25519-signingkey.pub";
         sopsFile = sopsFile;
       };
     };

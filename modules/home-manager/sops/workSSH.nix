@@ -27,12 +27,12 @@
         path = "${config.home.homeDirectory}/.ssh/work-ed25519.pub";
         sopsFile = ../../../secrets/workSSHKeys.yaml;
       };
-      "ssh/lucidph3nx-ed25519" = {
-        path = "${config.home.homeDirectory}/.ssh/lucidph3nx-ed25519";
+      "ssh/prismatic-koi-ed25519" = {
+        path = "${config.home.homeDirectory}/.ssh/prismatic-koi-ed25519";
         sopsFile = ../../../secrets/workSSHKeys.yaml;
       };
-      "ssh/lucidph3nx-ed25519.pub" = {
-        path = "${config.home.homeDirectory}/.ssh/lucidph3nx-ed25519.pub";
+      "ssh/prismatic-koi-ed25519.pub" = {
+        path = "${config.home.homeDirectory}/.ssh/prismatic-koi-ed25519.pub";
         sopsFile = ../../../secrets/workSSHKeys.yaml;
       };
     };
