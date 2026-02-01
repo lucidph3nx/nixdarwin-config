@@ -8,6 +8,7 @@
   users.users.ben = {
     home = "/Users/ben";
   };
+  networking.hostName = "m1mac";
 
   programs.zsh = {
     enable = true;
