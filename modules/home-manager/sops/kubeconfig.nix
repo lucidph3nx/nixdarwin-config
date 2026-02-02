@@ -17,6 +17,10 @@
         path = "${config.home.homeDirectory}/.config/kube/config-work";
         sopsFile = sopsFile;
       };
+      workreadonlykube = {
+        path = "${config.home.homeDirectory}/.config/kube/config-work-readonly";
+        sopsFile = sopsFile;
+      };
     };
   };
 }
