@@ -12,6 +12,7 @@
     ./k9s.nix
     ./kubetools.nix
     ./lf.nix
+    ./rust.nix
     ./zsh.nix
     # tmux, tmuxSessioniser now managed by prism
   ];
@@ -23,6 +24,7 @@
     k9s.enable = lib.mkDefault true;
     kubetools.enable = lib.mkDefault true;
     lf.enable = lib.mkDefault true;
+    rust.enable = lib.mkDefault true;
     # tmux now managed by prism
     # tmuxSessioniser now managed by prism
     zsh.enable = lib.mkDefault true;
